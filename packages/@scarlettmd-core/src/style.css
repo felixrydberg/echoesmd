@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tiptap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px 16px 16px 64px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.block {
+  padding: 8px;
+  border-radius: 8px;
+  margin: 2px 0;
+}
+
+.block:hover {
+  background-color: #f9f9f9;
+}
+
+ul.block,
+li.block {
+  padding: initial;
+}
+
+ul.block {
+  padding-left: 28px;
+}
+
+ul.block li::marker {
+  color: #999;
+}

@@ -1,33 +1,43 @@
-# `Turborepo` Vite starter
+## Packages
 
-This is an official starter Turborepo.
-
-## Using this example
-
-Run the following command:
-
-```sh
-npx create-turbo@latest -e with-vite
-```
-
-## What's inside?
-
-This Turborepo includes the following packages and apps:
-
-### Apps and Packages
-
-- `docs`: a vanilla [vite](https://vitejs.dev) ts app
-- `web`: another vanilla [vite](https://vitejs.dev) ts app
-- `@repo/ui`: a stub component & utility library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: shared `eslint` configurations
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## @scarlett/core
+### Extensions 
+Name | Under development
+--- | ---
+@tiptap-pro/extension-drag-handle | True
+@tiptap-pro/extension-emoji | True
+@tiptap-pro/extension-file-handler | True
+@tiptap-pro/extension-mathematics | True
+@tiptap-pro/extension-node-range | True
+@tiptap-pro/extension-table-of-contents | True
+@tiptap-pro/extension-unique-id | True
+@tiptap/extension-bullet-list | True
+@tiptap/extension-character-count | True
+@tiptap/extension-code-block | True
+@tiptap/extension-code-block-lowlight | True
+@tiptap/extension-collaboration | True
+@tiptap/extension-collaboration-cursor | True
+@tiptap/extension-color | True
+@tiptap/extension-document | True
+@tiptap/extension-dropcursor | True
+@tiptap/extension-focus | True
+@tiptap/extension-font-family | True
+@tiptap/extension-heading | True
+@tiptap/extension-highlight | True
+@tiptap/extension-horizontal-rule | True
+@tiptap/extension-image | True
+@tiptap/extension-link | True
+@tiptap/extension-ordered-list | True
+@tiptap/extension-paragraph | True
+@tiptap/extension-placeholder | True
+@tiptap/extension-subscript | True
+@tiptap/extension-superscript | True
+@tiptap/extension-table | True
+@tiptap/extension-table-header | True
+@tiptap/extension-table-row | True
+@tiptap/extension-task-item | True
+@tiptap/extension-task-list | True
+@tiptap/extension-text-align | True
+@tiptap/extension-text-style | True
+@tiptap/extension-typography | True
+@tiptap/extension-underline | True

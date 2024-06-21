@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/typescript-config/vite.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "jsx": "preserve"
+  }
+}
