@@ -26,7 +26,6 @@
   <div v-if="synced">
     <sidebar />
     <div
-      class="text-white"
       v-if="tabs.length > 0"
       v-for="(tab, index) in tabs"
       :key="`vault-tab-${index}`"

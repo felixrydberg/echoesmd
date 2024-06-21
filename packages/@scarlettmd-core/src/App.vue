@@ -8,5 +8,7 @@ instance.register(ydoc);
 </script>
 
 <template>
-  <scarlettmd-vault />
+  <div class="text-white">
+    <scarlettmd-vault />
+  </div>
 </template>

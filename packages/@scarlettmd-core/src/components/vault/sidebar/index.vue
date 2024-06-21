@@ -50,7 +50,7 @@ onUnmounted(() => {
         <button @click="handleCreateFile">Create File</button>
         <button @click="handleCreateFolder">Create Folder</button>
       </li>
-      <ListItem class="text-white" v-for="file in files" :key="file.id" :file="file" />
+      <ListItem v-for="file in files" :key="file.id" :file="file" />
     </ul>
   </div>
 </template>
