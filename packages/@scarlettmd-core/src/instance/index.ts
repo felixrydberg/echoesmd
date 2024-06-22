@@ -314,7 +314,7 @@ export const createScalettInstance = () => {
     unloadPage(id) {
       const page = instance.getPage(id);
       if (page) {
-        page.destroy();
+        page.ydoc.destroy();
         emit('page:unloaded', page);
       }
     }

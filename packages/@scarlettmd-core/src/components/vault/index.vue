@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { nextTick, onMounted, ref } from 'vue';
   import sidebar from '@/components/vault/sidebar/index.vue';
+  import  scarlettVaultTabs from '@/components/vault/tabs/index.vue'
   import { useInstance } from '@/instance';
   import { ItemPage } from '@/types';
 
@@ -16,6 +17,13 @@
         activeTab.value = page.id;
       })
     })
+    instance.subscribe("page:unloaded", (...args: unknown[]) => {
+      const page = args[0] as ItemPage;
+      const index = tabs.value.findIndex((_page) => _page.id === page.id)
+      if (index >= 0) {
+        tabs.value.splice(index, 1);
+      }
+    })
     if (instance.db) {
       instance.db.synced ? synced.value = true : instance.db.on('synced', () => synced.value = true);
     }
@@ -25,13 +33,7 @@
 <template>
   <div v-if="synced">
     <sidebar />
-    <div
-      v-if="tabs.length > 0"
-      v-for="(tab, index) in tabs"
-      :key="`vault-tab-${index}`"
-    >
-      <scarlettmd-tab v-model:active="activeTab" :tab="tab" />
-    </div>
+    <scarlett-vault-tabs v-if="tabs.length !== 0" :pages="tabs" />
     <div v-else>
       No active tabs
     </div>
