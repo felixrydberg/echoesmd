@@ -1,6 +1,6 @@
 import StarterKit from "@tiptap/starter-kit";
 
-const classes = "block text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800"
+const classes = "block text-neutral-950 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-950 hover:bg-neutral-200 dark:hover:bg-neutral-900"
 
 export default StarterKit.configure({
   heading: {
