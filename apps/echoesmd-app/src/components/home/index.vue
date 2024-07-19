@@ -19,6 +19,17 @@
 
   const joinDemoVault = () => {
     console.log('Joining demo vault');
+    const vault: Vault = {
+      id: crypto.randomUUID(),
+      name: 'Demo Vault',
+      url: 'echoes-demo-server.240284308.xyz:3000',
+      token: '',
+      collaboration: true,
+      lastOpened: new Date().toISOString(),
+    };
+    echoes.addVault(vault);
+    echoes.setOpenLast(true);
+    router.push(`/${vault.id}`);
   }
 
   const handleOpenVault = (vault: Vault) => {
