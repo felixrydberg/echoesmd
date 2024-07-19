@@ -6,6 +6,7 @@
   import { useEchoesStore } from '../../store/echoes';
   import { useRouter } from 'vue-router';
   import { Vault } from '../../types';
+  import { formatDate } from '../../utils/index.ts';
 
   const createModal = ref(false);
   const echoes = useEchoesStore();
@@ -39,14 +40,14 @@
         <div class="flex flex-wrap justify-center">
           <div class="flex justify-center flex-col w-full">
             <h1 class="font-medium text-5xl">Echoes</h1>
-            <p class="text-sm font-medium text-neutral-500 pt-1">Early Access Version 0.0.1</p>
+            <p class="text-sm font-medium text-neutral-500 pt-1">Early Access Version 1.0.0</p>
           </div>
           <div class="flex flex-col-reverse w-fit">
             <echoes-ui-list class="text-start">
               <echoes-ui-list-item v-for="(vault, index) in vaults" :key="`home-vault-${index}`" class="relative text-sm font-normal flex gap-x-8 justify-between items-center p-4 px-8 h-16">
                 <div class="w-48">
                   <h1 class="text-sm">{{ vault.name }}</h1>
-                  <span class="text-neutral-500 text-sm">Opened: {{ new Date(vault.lastOpened).getTime() }}</span>
+                  <span class="text-neutral-500 text-sm">Opened: {{ formatDate(new Date(vault.lastOpened)) }}</span>
                 </div>
                 <echoes-ui-button @click="handleOpenVault(vault)" size="small" class="text-sm w-28 text-center">
                   Open
