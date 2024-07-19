@@ -1,0 +1,6 @@
+# Only the go provider will be run
+providers = ["node"]
+[phases.setup]
+nixPkgs = ["bun"]
+[phases.build]
+cmds = ["bun run build"]
