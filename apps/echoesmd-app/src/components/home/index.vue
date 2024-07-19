@@ -17,7 +17,7 @@
   }
 
   const joinDemoVault = () => {
-    
+    console.log('Joining demo vault');
   }
 
   const handleOpenVault = (vault: Vault) => {
@@ -39,7 +39,7 @@
         <div class="flex flex-wrap justify-center">
           <div class="flex justify-center flex-col w-full">
             <h1 class="font-medium text-5xl">Echoes</h1>
-            <p class="text-sm font-medium text-neutral-500">Version 0.0.1</p>
+            <p class="text-sm font-medium text-neutral-500 pt-1">Early Access Version 0.0.1</p>
           </div>
           <div class="flex flex-col-reverse w-fit">
             <echoes-ui-list class="text-start">
@@ -68,16 +68,13 @@
                   Create
                 </echoes-ui-button>
               </echoes-ui-list-item>
-              <echoes-ui-list-item :class="border.item" class="text-sm font-normal flex-col justify-around p-4 px-8 h-16 border-t-0 border-r-0 border-l-0">
-                <div class="flex gap-x-8 justify-between items-center">
-                  <span class="w-48">
-                    Join Vault
-                  </span>
-                  <echoes-ui-button @click="joinDemoVault" size="small" class="text-sm w-28">
-                    Join
-                  </echoes-ui-button>
-                </div>
-                  <p class="text-sm text-neutral-500 font-normal text-center">This feature is still in development and only a preview for now</p>
+              <echoes-ui-list-item :class="border.item" class="text-sm font-normal flex gap-x-8 justify-between items-center p-4 px-8 h-16 border-t-0 border-r-0 border-l-0">
+                <span class="w-48">
+                  Join Vault (Demo)
+                </span>
+                <echoes-ui-button @click="joinDemoVault" size="small" class="text-sm w-28">
+                  Join
+                </echoes-ui-button>
               </echoes-ui-list-item>
             </echoes-ui-list>
           </div>

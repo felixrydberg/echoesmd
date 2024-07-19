@@ -92,9 +92,9 @@ const handleCreateFolder = () => {
             </div>
           </echoes-ui-button>
           <echoes-ui-modal v-model="trashModal">
-            <echoes-ui-container class="flex flex-col p-2 rounded-lg">
+            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96">
               <div class="flex items-center pr-6">
-                <echoes-ui-button @click="settingsModal = false" class="h-6 w-6" size="small">
+                <echoes-ui-button @click="trashModal = false" class="h-6 w-6" size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                     <path fill-rule="evenodd" d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
                   </svg>
@@ -102,7 +102,7 @@ const handleCreateFolder = () => {
                 <p class="text-lg font-bold w-full text-center">Trash</p>
               </div>
               <div class="h-full">
-                <echoes-ui-list>
+                <echoes-ui-list v-if="trash.length > 0">
                   <echoes-ui-list-item v-for="item in trash">
                     {{ item }}
                     <echoes-ui-button @click="instance.restoreItem(item.id)">
@@ -113,6 +113,9 @@ const handleCreateFolder = () => {
                     </echoes-ui-button>
                   </echoes-ui-list-item>
                 </echoes-ui-list>
+                <div v-else class="flex justify-center items-center h-64">
+                  <p class="text-center text-sm text-neutral-500">No items in trash</p>
+                </div>
               </div>
             </echoes-ui-container>
           </echoes-ui-modal>
@@ -130,7 +133,7 @@ const handleCreateFolder = () => {
             </div>
           </echoes-ui-button>
           <echoes-ui-modal v-model="settingsModal">
-            <echoes-ui-container class="flex flex-col p-2 rounded-lg">
+            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96 min-h-64">
               <div class="flex items-center pr-6">
                 <echoes-ui-button @click="settingsModal = false" class="h-6 w-6" size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
@@ -141,7 +144,7 @@ const handleCreateFolder = () => {
               </div>
               <div class="h-full">
                 <echoes-ui-list class="pt-4">
-                  <echoes-ui-list-item class="flex items-center justify-between w-48">
+                  <echoes-ui-list-item class="flex items-center justify-between">
                     Change theme
                     <echoes-ui-button @click="echoes.setTheme(theme === 'light' ? 'dark' : 'light')">
                       <svg class="size-4 block dark:hidden m-0 animate-[spin_500ms_ease]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">

@@ -52,7 +52,7 @@ import { useRouter } from 'vue-router';
         </div>
       </template>
       <div :class="[background.item, border.item, 'hidden md:flex text-xs justify-center items-center p-1 rounded-lg w-full']">
-        {{ name }}
+        {{ currentVault.name }}
       </div>
     </echoes-app-header>
     <echoes-ui-container class="flex z-0 h-full">

@@ -49,9 +49,10 @@ import { useRouter } from 'vue-router';
       name: name.value,
       url: url.value,
       token: token.value,
-      collaboration: collaboration.value ? {
-        password: password.value,
-      } : false,
+      // collaboration: collaboration.value ? {
+      //   password: password.value,
+      // } : false,
+      collaboration: false,
       lastOpened: new Date().toISOString(),
     };
 
@@ -77,11 +78,11 @@ import { useRouter } from 'vue-router';
       <h1 class="text-lg">Create Vault</h1>
       <form @submit.prevent.stop=handleSubmit class="text-sm flex flex-col gap-y-2 select-none pt-1">
         <input class="p-2 rounded test-xs outline-none" :class="[border.item, background.container]" type="text" placeholder="Vault name" v-model="name" />
-        <div class="flex flex-col gap-y-2">
+        <!-- <div class="flex flex-col gap-y-2">
           <div class="flex flex-col gap-y-2">
             <div class="flex">
-              <div class="flex items-center w-full gap-x-1 p-1 px-2">
-                <input :class="border.item" type="checkbox" id="collaboration" v-model="collaboration" />
+              <div class="flex items-center w-full gap-x-1 p-1 px-2 text-neutral-500 opacity-50">
+                <input :class="border.item" type="checkbox" id="collaboration" disabled v-model="collaboration" />
                 <label for="collaboration">Collaboration</label>
               </div>
               <div class="flex items-center w-full gap-x-1 p-1 px-2" :class="{'text-neutral-500 opacity-50': !collaboration}">
@@ -99,7 +100,7 @@ import { useRouter } from 'vue-router';
               <input class="p-2 rounded test-xs outline-none" type="password" :disabled="!collaboration" :class="[border.item, background.container]" placeholder="Password" v-model="password" />
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="flex gap-x-2">
           <echoes-ui-button class="w-full" size="small" @click="handleCancel">Cancel</echoes-ui-button>
           <echoes-ui-button class="w-full" size="small" type="submit" primary>Create</echoes-ui-button>
