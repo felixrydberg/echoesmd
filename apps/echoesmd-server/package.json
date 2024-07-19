@@ -1,0 +1,29 @@
+{
+  "name": "@echoesmd/server",
+  "module": "./index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development bun run ./src/index.ts",
+    "build": "NODE_ENV=production bun build ./src/index.ts --outdir ./build --target node"
+  },
+  "exports": {
+    ".": "./server.ts"
+  },
+  "bin": {
+    "echoes": "./cli.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-database": "^2.13.5",
+    "@hocuspocus/server": "^2.13.5",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "hono": "^4.4.12",
+    "pm2": "^5.4.1"
+  }
+}

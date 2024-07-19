@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+</head>
+
+<body>
+  <div class="p-2">
+    <form method="POST" action="http://localhost:8080/user/login">
+      <input class="p-2" type="text" name="username" placeholder="Username">
+      <input class="p-2" type="password" name="password" placeholder="Password">
+      <button class="p-2" type="submit">Login</button>
+    </form>
+    <button class="p-2" id="start">Start</button>
+    <button class="p-2" id="stop">Stop</button>
+    <button class="p-2" id="test">Test</button>
+    <script>
+      const startButton = document.getElementById('start');
+      const stopButton = document.getElementById('stop');
+      const testButton = document.getElementById('test');
+
+      const fetchOptions = {
+        method: 'POST',
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      testButton.addEventListener('click', async () => {
+        const result = await fetch('http://localhost:8080/test', {
+          ...fetchOptions,
+          method: 'GET',
+          // body: JSON.stringify({
+            // action: 'Test',
+          // }),
+        })
+        console.log(await result.json())
+      });
+
+
+
+
+
+      startButton.addEventListener('click', async () => {
+        const result = await fetch('http://localhost:8080/server', {
+          ...fetchOptions,
+          body: JSON.stringify({
+            action: 'Start',
+          }),
+        })
+        console.log(await result)
+        console.log(await result.json())
+      });
+
+      stopButton.addEventListener('click', async () => {
+        const result = await fetch('http://localhost:8080/server', {
+          ...fetchOptions,
+          body: JSON.stringify({
+            action: 'Stop',
+          }),
+        })
+        console.log(await result)
+        console.log(await result.json())
+      });
+
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = form.querySelector('input[name="username"]').value;
+        const password = form.querySelector('input[name="password"]').value;
+        const result = await fetch('http://localhost:8080/user/login', {
+          ...fetchOptions,
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        })
+        console.log(await result)
+        console.log(await result.json())
+      });
+    </script>
+  </disv>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

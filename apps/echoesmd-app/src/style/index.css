@@ -1,0 +1,65 @@
+@import url('./fonts.css');
+@import url('./transition.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: Noto-Sans;
+}
+
+.tiptap * {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tiptap {
+  padding: 16px 16px 16px 64px;
+  border-radius: 8px;
+  outline: none;
+  height: 100%;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap .block {
+  padding: 8px;
+  border-radius: 8px;
+  margin: 2px auto;
+}
+
+.tiptap .block:hover {
+  background-color: #f9f9f9;
+}
+
+.tiptap ul.block,
+.tiptap li.block {
+  padding: initial;
+}
+
+.tiptap ul.block {
+  padding-left: 28px;
+}
+
+.tiptap ul.block li::marker {
+  color: #999;
+}
+
+.tiptap h1.block {
+  @apply text-3xl font-semibold;
+}
+
+.tiptap h2.block {
+  @apply text-2xl font-semibold;
+}
+
+.tiptap h3.block {
+  @apply text-xl font-semibold;
+}
