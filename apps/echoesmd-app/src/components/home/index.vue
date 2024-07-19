@@ -6,7 +6,7 @@
   import { useEchoesStore } from '../../store/echoes';
   import { useRouter } from 'vue-router';
   import { Vault } from '../../types';
-  import { formatDate } from '../../utils/index.ts';
+  import { formatDate } from '../../utils/index';
 
   const createModal = ref(false);
   const echoes = useEchoesStore();
