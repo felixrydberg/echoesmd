@@ -262,7 +262,7 @@ export const createEchoInstance = (options?: Vault) => {
           let closes = 0;
           const ws = new HocuspocusProviderWebsocket({
             maxAttempts: maxAttempts,
-            url: `wss://${url}`,
+            url: `ws://${url}`,
             onOpen(data) {
               resolve({
                 connected: true,

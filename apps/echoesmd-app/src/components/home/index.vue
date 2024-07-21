@@ -21,10 +21,12 @@
     console.log('Joining demo vault');
     const vault: Vault = {
       id: crypto.randomUUID(),
-      name: 'Demo Vault',
-      url: 'echoes-demo-server.240284308.xyz:3000',
+      name: 'Local Demo Vault',
+      url: 'echoes-demo-server.240284308.xyz',
       token: '',
-      collaboration: true,
+      collaboration: {
+        password: 'password',
+      },
       lastOpened: new Date().toISOString(),
     };
     echoes.addVault(vault);
