@@ -1,6 +1,4 @@
 ## Roadmap
-- ### v1
-
 - ### Release
   - Better server and authentication
   - Remember Vault groups

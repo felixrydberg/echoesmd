@@ -12,7 +12,7 @@
     "prettier": "^3.2.5",
     "turbo": "latest"
   },
-  "name": "with-vite",
+  "name": "echoesmd",
   "packageManager": "npm@10.2.3",
   "workspaces": [
     "apps/*",
