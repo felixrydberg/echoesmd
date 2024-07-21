@@ -20,8 +20,8 @@
   const joinDemoVault = () => {
     console.log('Joining demo vault');
     const vault: Vault = {
-      id: crypto.randomUUID(),
-      name: 'Local Demo Vault',
+      id: 'demo-vault-echoesmd',
+      name: 'Demo Vault',
       url: 'echoes-demo-server.240284308.xyz',
       token: '',
       collaboration: {
