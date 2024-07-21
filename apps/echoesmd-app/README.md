@@ -7,7 +7,8 @@
   - Remember Vault groups
   - Better groups, drag and drop, new Windows, change size of group window
   - Move vault store to echoes store
-  - Plugin support?
+  - Plugin support
+  - Import Export
 
 - ### Refactors
   - Instance
