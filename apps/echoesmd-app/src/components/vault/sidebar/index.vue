@@ -73,7 +73,9 @@ const handleCreateFolder = () => {
             </svg>
           </echoes-ui-button>
         </echoes-ui-list-item>
-        <vault-sidebar-list-item v-for="file in tree" :key="file.id" :file="file" />
+        <div class="overflow-y-scroll overflow-x-hidden max-h-[50vh]">
+          <vault-sidebar-list-item v-for="file in tree" :key="file.id" :file="file" />
+        </div>
       </echoes-ui-list>
       <echoes-ui-list class="px-2 flex flex-col gap-y-1 ml-0 h-full">
         <echoes-ui-list-item class="text-xs font-bold p-1 text-neutral-500">

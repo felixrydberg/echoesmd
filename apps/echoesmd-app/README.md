@@ -2,6 +2,7 @@
 - ### v1
   <!-- - Be able to remove group unless there only is one group -->
   <!-- - Trash folders  -->
+  Style trash page
 - ### Release
   - Better server and authentication
   - Remember Vault groups
@@ -20,4 +21,4 @@
     - Remove methods
   - Vue
     - Load item when component loads, not when pressing the tab. Unload item when component unmounts
-    - Store all vaults in echoes store and persist which tabs are open. Above is prerequisite since this will just  keep a copy of the item. 
+    - Store all vaults in echoes store and persist which tabs are open. Above is prerequisite since this will just  keep a copy of the item.

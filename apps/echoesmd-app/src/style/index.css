@@ -63,3 +63,33 @@
 .tiptap h3.block {
   @apply text-xl font-semibold;
 }
+
+/* Make scrollbar transparent */
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+*::-webkit-scrollbar {
+  background: transparent;
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  width: 6px;
+  border: 1px solid transparent;
+}
+
+.light *::-webkit-scrollbar-thumb {
+  @apply bg-neutral-400;
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  @apply bg-neutral-700;
+}
