@@ -1,15 +1,15 @@
 ## Roadmap
 - ### v1
-  <!-- - Be able to remove group unless there only is one group -->
-  <!-- - Trash folders  -->
-  Style trash page
+
 - ### Release
   - Better server and authentication
   - Remember Vault groups
   - Better groups, drag and drop, new Windows, change size of group window
   - Move vault store to echoes store
   - Plugin support
+    - Refactor text editor into "Base" Plugin
   - Import Export
+  - Delete multiple files
 
 - ### Refactors
   - Instance
