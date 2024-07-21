@@ -118,10 +118,10 @@ const handleCreateFolder = () => {
                         {{ item.name }}
                       </div>
                       <div class="flex gap-x-1">
-                        <echoes-ui-button class="py-1" primary @click="instance.restoreItem(item.id)">
+                        <echoes-ui-button class="py-1 text-white dark:text-white hover:text-green-600 hover:dark:text-green-600" :background="false" :hover="false" @click="instance.restoreItem(item.id)">
                           Restore
                         </echoes-ui-button>
-                        <echoes-ui-button class="py-1 text-white dark:text-white bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-semibold" :background="false" :hover="false" @click="instance.deleteItem(item.id)">
+                        <echoes-ui-button class="py-1 text-white dark:text-white hover:text-red-600 dark:hover:text-red-600 text-semibold" :background="false" :hover="false" @click="instance.deleteItem(item.id)">
                           Trash
                         </echoes-ui-button>
                       </div>
