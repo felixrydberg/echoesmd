@@ -132,9 +132,11 @@ export const createEchoInstance = (options?: Vault) => {
         })
         instance.subscribe("page:unloaded", (...args: unknown[]) => {
           const page = args[0] as ItemPage;
+          console.log('Page unloaded', page);
           store.groups.forEach((group) => {
             const tabs = group.tabs;
             const arr = [...tabs];
+            console.log(arr)
             const index = arr.findIndex((tab) => tab.id === page.id);
             if (index > -1) {
               const vault = useVaultStore();
@@ -157,13 +159,18 @@ export const createEchoInstance = (options?: Vault) => {
             const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/igm;
             const keys = Object.keys(event.target.toJSON());
             const matches = keys.join('\n').match(regex)
+            
+            const handleItem = (item: Item) => {
+            
+            }
+
             if (matches?.length === keys.length) {
               const items = event.target.toJSON() as {[key: string]: Item};
-
               const trashBuffer: {[key: string]: Item[]} = {};
               const buffer: {[key: string]: Item[]} = {};
               for (const key in items) {
                 const item = items[key];
+                console.log(item)
                 if (item.deleted) {
                   trash[key] = item;
                   if (!trashBuffer[item.parent]) {
@@ -204,7 +211,33 @@ export const createEchoInstance = (options?: Vault) => {
             } else {
               const item = event.target.toJSON() as Item;
               if (item.deleted) {
-                // Check if item is in trash
+                if (instancePages[item.id]) {
+                  instance.unloadPage(item.id);
+                  delete instancePages[item.id];
+                }
+                delete instanceItems[item.id];
+                delete instanceOrderItems[item.id];
+                const index = instanceOrderItems[item.parent].findIndex((i) => i.id === item.id);
+                instanceOrderItems[item.parent].splice(index, 1);
+                trash[item.id] = item;
+                if (!trashOrder[item.parent]) {
+                  trashOrder[item.parent] = [];
+                }
+                trashOrder[item.parent].push(item);
+
+              } else {
+                instanceItems[item.id] = item;
+                delete trash[item.id];
+                delete trashOrder[item.parent];
+                if (!instanceOrderItems[item.parent]) {
+                  instanceOrderItems[item.parent] = [];
+                }
+                const index = instanceOrderItems[item.parent].findIndex((i) => i.id === item.id);
+                if (index === -1) {
+                  instanceOrderItems[item.parent].push(item);
+                } else {
+                  instanceOrderItems[item.parent][index] = item;
+                }
               }
             }
 
@@ -259,10 +292,12 @@ export const createEchoInstance = (options?: Vault) => {
         const { url } = options;
         try {
           const maxAttempts = 3
+          // const extension = window.location.protocol.includes('https') ? 'wss' : 'ws'
+          const extension = 'wss'
           let closes = 0;
           const ws = new HocuspocusProviderWebsocket({
             maxAttempts: maxAttempts,
-            url: `wss://${url}`,
+            url: `${extension}://${url}`,
             onOpen(data) {
               resolve({
                 connected: true,
