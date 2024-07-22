@@ -19,6 +19,10 @@ import { twMerge } from 'tailwind-merge';
     size: {
       type: String as PropType<"sm" | "md" | "lg" | "xl" | "2xl" | "full">,
       default: "full"
+    },
+    tag: {
+      type: String,
+      default: 'div'
     }
   })
 
@@ -45,7 +49,7 @@ import { twMerge } from 'tailwind-merge';
 </script>
 
 <template>
-  <ui-base :border="props.border" :shadow="shadow" :class="twMerge(getSize(), props.class)">
+  <ui-base :tag="tag" :border="props.border" :shadow="shadow" :class="twMerge(getSize(), props.class)">
     <slot />
   </ui-base>
 </template>
