@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "@repo/typescript-config/vite.json",
+    "astro/tsconfigs/strict"
+  ],
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    "jsx": "preserve"
+  }
+}
