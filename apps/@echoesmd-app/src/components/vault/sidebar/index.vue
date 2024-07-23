@@ -108,20 +108,20 @@ const handleCreateFolder = () => {
                   <echoes-ui-list-item v-for="item in trash">
                     <echoes-ui-container-item hover class="flex items-center justify-between my-1 p-1 px-2 rounded-lg">
 
-                      <div class="flex">
-                        <svg v-if="item.type === 'folder'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                      <div class="flex items-center">
+                        <svg v-if="item.type === 'folder'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-4 fill-neutral-500">
                           <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h2.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 9.62 4H12.5A1.5 1.5 0 0 1 14 5.5v1.401a2.986 2.986 0 0 0-1.5-.401h-9c-.546 0-1.059.146-1.5.401V3.5ZM2 9.5v3A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 12.5 8h-9A1.5 1.5 0 0 0 2 9.5Z" />
                         </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-4 fill-neutral-500">
                           <path fill-rule="evenodd" d="M4 2a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5V6.621a1.5 1.5 0 0 0-.44-1.06L9.94 2.439A1.5 1.5 0 0 0 8.878 2H4Zm1 5.75A.75.75 0 0 1 5.75 7h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 7.75Zm0 3a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
                         </svg>
                         {{ item.name }}
                       </div>
-                      <div class="flex gap-x-1">
-                        <echoes-ui-button class="py-1 text-white dark:text-white hover:text-green-600 hover:dark:text-green-600" :background="false" :hover="false" @click="instance.restoreItem(item.id)">
+                      <div class="flex items-center gap-x-1">
+                        <echoes-ui-button class="py-1 text-black dark:text-white hover:text-green-600 hover:dark:text-green-600" :background="false" :hover="false" @click="instance.restoreItem(item.id)">
                           Restore
                         </echoes-ui-button>
-                        <echoes-ui-button class="py-1 text-white dark:text-white hover:text-red-600 dark:hover:text-red-600 text-semibold" :background="false" :hover="false" @click="instance.deleteItem(item.id)">
+                        <echoes-ui-button class="py-1 text-black dark:text-white hover:text-red-600 dark:hover:text-red-600 text-semibold" :background="false" :hover="false" @click="instance.deleteItem(item.id)">
                           Trash
                         </echoes-ui-button>
                       </div>
