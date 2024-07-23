@@ -16,10 +16,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  default: {
-    type: Boolean,
-    default: true
-  },
   primary: {
     type: Boolean,
     default: false

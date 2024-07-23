@@ -1,6 +1,6 @@
 ---
 import type { Update } from '../pages/index.astro'
-import { background, border, hover } from '@echoesmd/ui'
+import { border, hover } from '@echoesmd/ui'
 
 interface Props {
   update: Update
@@ -17,7 +17,7 @@ const publishes = update.updates.filter((update) => update.type === 'Publish');
   <ul class="pl-4 w-64">
     {[features, refactors, publishes].map((updates, index) => updates.length > 0 && (
       <li class="py-2">
-        <h2 class="text-lg capitalize pt-2 p-1 px-2 text-center border-t border-b-0 border-l-0 border-r-0" class:list={[hover.item, index !== updates.length ? border.item : '']}>{updates[0].type}:</h2>
+        <h2 class="text-lg capitalize pt-2 p-1 px-2 text-center border-t border-b-0 border-l-0 border-r-0" class:list={[index !== updates.length ? border.item : '']}>{updates[0].type}:</h2>
         <ul class="pl-4">
           {updates.map((update) => (
             <li class="p-1 px-2 rounded-lg list-disc" class:list={hover.item}>{update.description}</li>

@@ -75,34 +75,11 @@ const roadmap: Update[] = [
 		]
 	}
 ];
-
-const getSection = (update: Update) => {
-	const sections = [];
-
-	const features = update.updates.filter((update) => update.type === 'Feature');
-	const refactors = update.updates.filter((update) => update.type === 'Refactor');
-	const publishes = update.updates.filter((update) => update.type === 'Publish');
-
-	const items = [features, refactors, publishes];
-	for (let i = 0; i < items.length; i++) {
-		const item = items[i];
-		if (item.length === 0) {
-			continue
-		};
-
-		sections.push(`<li class="font-semibold">${item[0].type}</li>`);
-		for (let y = 0; y < item.length; y++) {
-			sections.push(`<li>${item[y].description}</li>`);
-		}
-	}
-
-	return sections;
-};
 ---
 
 <Layout class:list="relative" title="Welcome to Astro." description="Landing page for Echoesmd">
 	<!-- Ignore Error. Astro doenst understand optional props -->
-	<EchoesUiContainer class="max-h-screen h-full aspect-video" tag="main">
+	<EchoesUiContainer class="max-h-screen h-full aspect-video" shadow={false} border="none" size="full" tag="main">
 		<!-- Banner -->
 		<div class="h-screen flex items-center justify-center">
 			<div>
@@ -121,7 +98,7 @@ const getSection = (update: Update) => {
 				</div>
 				<div class="flex gap-x-1 justify-center">
 					<!-- Ignore Error. Astro doenst understand optional props -->
-					<EchoesUiButton primary class="rounded-full p-0 shadow-lg">
+					<EchoesUiButton primary secondary={false} size="normal" hover background link="" class="rounded-full p-0 shadow-lg">
 						<a href="https://echoesmd.240284308.xyz/" class="text-sm px-3 py-1 group flex items-center">
 							Test now
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="
@@ -140,7 +117,7 @@ const getSection = (update: Update) => {
 						</a>
 					</EchoesUiButton>
 					<!-- Ignore Error. Astro doenst understand optional props -->
-					<EchoesUiButton class="rounded-full p-0 shadow-lg">
+					<EchoesUiButton primary={false} secondary={false} size="normal" hover background link="" class="rounded-full p-0 shadow-lg">
 						<a href="#roadmap" class="flex items-center text-sm group px-3 py-1">
 							Roadmap
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="
