@@ -786,7 +786,7 @@ const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
 						<td>{issue.name}</td>
 						<td>{issue.state}</td>
 						<td class="capitalize">{issue.priority}</td>
-						<td>{issue.labels.map((label) => (
+						<td>{issue.labels.map((label: unknown) => (
 							<span class:list={[background.item, hover.item]} class="text-white rounded-full px-2 py-1">{JSON.stringify(label)}</span>
 						))}</td>
 					</tr>
