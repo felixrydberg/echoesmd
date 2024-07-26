@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { EchoesUiContainer, EchoesUiButton, typography, background, hover } from "@echoesmd/ui";
-import type { Issue } from "@echoesmd/website-cron-worker";
+// import type { Issue } from "@echoesmd/website-cron-worker";
 
 export interface Update {
   name: string;
@@ -13,14 +13,14 @@ export interface Update {
 
 const type = process.argv[2];
 // When building will get the latest issues from D1
-const issues: Issue[] =
+const issues: any[] =
   type === "build"
     ? await (async function () {
         const result = await fetch(
           "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
         );
         console.log("Getting issues from D1");
-        const issues: Issue[] = await result.json();
+        const issues: any[] = await result.json();
         return issues
       })()
     : [
@@ -600,24 +600,24 @@ const issues: Issue[] =
 // 	Medium
 // 	Low
 
-const backlog = issues.filter((issue) => issue.state === "Backlog");
-const inProgress = issues.filter((issue) => issue.state === "In Progress");
-const done = issues.filter((issue) => issue.state === "Done");
-const cancelled = issues.filter((issue) => issue.state === "Cancelled");
-const todo = issues.filter((issue) => issue.state === "Todo");
+// const backlog = issues.filter((issue) => issue.state === "Backlog");
+// const inProgress = issues.filter((issue) => issue.state === "In Progress");
+// const done = issues.filter((issue) => issue.state === "Done");
+// const cancelled = issues.filter((issue) => issue.state === "Cancelled");
+// const todo = issues.filter((issue) => issue.state === "Todo");
 
-const getColor = (state: string) => {
-  switch (state) {
-    case "Backlog":
-      return "text-red-500";
-    case "In Progress":
-      return "text-yellow-500";
-    case "Done":
-      return "text-green-500";
-    default:
-      return "text-gray-500";
-  }
-};
+// const getColor = (state: string) => {
+//   switch (state) {
+//     case "Backlog":
+//       return "text-red-500";
+//     case "In Progress":
+//       return "text-yellow-500";
+//     case "Done":
+//       return "text-green-500";
+//     default:
+//       return "text-gray-500";
+//   }
+// };
 
 const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
 
@@ -787,7 +787,7 @@ const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
 						<td>{issue.state}</td>
 						<td class="capitalize">{issue.priority}</td>
 						<td>{issue.labels.map((label) => (
-							<span class:list={background.item, hover.item} class="text-white rounded-full px-2 py-1">{JSON.stringify(label)}</span>
+							<span class:list={[background.item, hover.item]} class="text-white rounded-full px-2 py-1">{JSON.stringify(label)}</span>
 						))}</td>
 					</tr>
 				))}
