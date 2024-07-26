@@ -1,108 +1,715 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { EchoesUiContainer, EchoesUiButton, typography } from '@echoesmd/ui';
-import UpdateCard from '../components/update.astro';
+import Layout from "../layouts/Layout.astro";
+import { EchoesUiContainer, EchoesUiButton, typography, background, hover } from "@echoesmd/ui";
+import type { Issue } from "@echoesmd/website-cron-worker";
 
 export interface Update {
-	name: string;
-	updates: {
-		type: 'Feature' | 'Refactor' | 'Publish';
-		description: string;
-	}[];
+  name: string;
+  updates: {
+    type: "Feature" | "Refactor" | "Publish";
+    description: string;
+  }[];
 }
 
-const roadmap: Update[] = [
-	{
-		name: 'Early Access 2.0',
-		updates: [
-			{
-				type: 'Feature',
-				description: 'Website tracking issues in realtime'
-			},
-			{
-				type: 'Feature',
-				description: 'Plugin support'
-			},
-			{
-				type: 'Feature',
-				description: 'Import Export from file'
-			},
-			{
-				type: 'Refactor',
-				description: 'Echoes-UI'
-			},
-			{
-				type: 'Refactor',
-				description: 'Change when page is loaded'
-			},
-			{
-				type: 'Refactor',
-				description: 'Helper methods'
-			},
-			{
-				type: 'Refactor',
-				description: 'Instance Items'
-			},
-			{
-				type: 'Feature',
-				description: 'Drag and drop files in tree'
-			},
-		]
-	},
-	{
-		name: 'Early Access 3.0',
-		updates: [
-			{
-				type: 'Feature',
-				description: 'Drag and drop tabs'
-			},
-			{
-				type: 'Publish',
-				description: 'Echoes-UI'
-			},
-			{
-				type: 'Feature',
-				description: 'Collaboration server'
-			},
-			{
-				type: 'Refactor',
-				description: 'Text editor plugin'
-			},
-			{
-				type: 'Feature',
-				description: 'Add extensions to Editor'
-			},
-		]
-	}
-];
+const type = process.argv[2];
+// When building will get the latest issues from D1
+const issues: Issue[] =
+  type === "build"
+    ? await (async function () {
+        const result = await fetch(
+          "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
+        );
+        console.log("Getting issues from D1");
+        const issues: Issue[] = await result.json();
+        return issues
+      })()
+    : [
+        {
+          id: "7a445a3d-67da-41ac-bab8-dadecc3bbf70",
+          created_at: "2024-07-21T19:26:25.572608Z",
+          updated_at: "2024-07-21T19:54:31.441452Z",
+          estimate_point: null,
+          name: "[EA 2.0] Feat: Plugin support",
+          description_html:
+            "<p>Add a way to add plugins for the editor. </p><p>Version 1 only needs to include a way to add a new file type.</p>",
+          description_stripped: null,
+          priority: "high",
+          start_date: null,
+          target_date: null,
+          sequence_id: 9,
+          sort_order: 24465,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "8230dffa-f239-43a3-be4a-7fff04117a40",
+          created_at: "2024-07-21T19:25:17.860536Z",
+          updated_at: "2024-07-21T19:54:36.198796Z",
+          estimate_point: null,
+          name: "[EA 2.0] Refac: Change when page is loaded",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "high",
+          start_date: null,
+          target_date: null,
+          sequence_id: 7,
+          sort_order: 125535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "85cc86ed-19b5-473a-b773-a2108e9926b3",
+          created_at: "2024-07-21T19:24:48.883940Z",
+          updated_at: "2024-07-21T19:54:39.099802Z",
+          estimate_point: null,
+          name: "[EA 2.0] Refac: Helper methods",
+          description_html:
+            '<p>Add methods</p><ul class="list-disc pl-7 space-y-2 tight" data-tight="true"><li class="not-prose space-y-2"><p>GetFilesFromParent: Will get all files under that parent (including grand-children)</p></li><li class="not-prose space-y-2"><p>GetFilesFromKeyValue: Will get all files with a specific key value pair</p></li></ul><p></p><p>Group methods of each "kind". Item, Page &amp; Get</p>',
+          description_stripped: null,
+          priority: "high",
+          start_date: null,
+          target_date: null,
+          sequence_id: 6,
+          sort_order: 115535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "b03ba6b3-7b8b-414b-a056-e9544677fc2a",
+          created_at: "2024-07-21T19:24:40.206815Z",
+          updated_at: "2024-07-21T19:55:47.648870Z",
+          estimate_point: null,
+          name: "[EA 2.0] Refac: Instance Items",
+          description_html:
+            '<p>Change Instance to not store items, instead pivot into when files are required use helper <a target="_blank" rel="noopener noreferrer nofollow" class="text-custom-primary-300 underline underline-offset-[3px] hover:text-custom-primary-500 transition-colors cursor-pointer" href="https://plane.240284308.xyz/loki/projects/b5cd9845-5399-407b-bb27-d2cb90805458/issues/85cc86ed-19b5-473a-b773-a2108e9926b3/">methods</a>.</p><p>This will allow for deep observer to only emit depending on what changes were made instead of having to also update the internal instances of Items.</p>',
+          description_stripped: null,
+          priority: "high",
+          start_date: null,
+          target_date: null,
+          sequence_id: 5,
+          sort_order: 0,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "3fecdab8-7d1b-4235-9c78-ee719be4a31c",
+          created_at: "2024-07-21T19:46:02.859772Z",
+          updated_at: "2024-07-21T19:54:21.906802Z",
+          estimate_point: null,
+          name: "[EA 2.0] Refactor Echoes-UI",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 13,
+          sort_order: 165535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "471952b1-b4b8-4d34-99b8-739defe82aed",
+          created_at: "2024-07-21T19:45:35.852501Z",
+          updated_at: "2024-07-22T19:48:07.652979Z",
+          estimate_point: null,
+          name: "[EA 3.0] Publish: Echoes-UI",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 12,
+          sort_order: 155535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
+              created_at: "2024-07-21T19:54:13.544932Z",
+              updated_at: "2024-07-21T19:54:13.544947Z",
+              name: "Early access 3.0",
+              description: "",
+              color: "#9900ef",
+              sort_order: 85535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "aaecfe91-9569-4cff-b84f-71a7474c104a",
+          created_at: "2024-07-21T19:35:39.932989Z",
+          updated_at: "2024-07-22T19:47:48.649359Z",
+          estimate_point: null,
+          name: "[EA 3.0] Feat: Add extensions to Editor",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 11,
+          sort_order: 145535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
+              created_at: "2024-07-21T19:54:13.544932Z",
+              updated_at: "2024-07-21T19:54:13.544947Z",
+              name: "Early access 3.0",
+              description: "",
+              color: "#9900ef",
+              sort_order: 85535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "46bc34e7-9bde-47b0-a9a1-5a129d152746",
+          created_at: "2024-07-21T19:26:13.309773Z",
+          updated_at: "2024-07-22T19:47:19.297470Z",
+          estimate_point: null,
+          name: "[EA 2.0] Feat: Import Export from file",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 8,
+          sort_order: 135535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "9627f289-a5cf-4100-ad73-4ec039ef7e3e",
+          created_at: "2024-07-21T19:23:42.268417Z",
+          updated_at: "2024-07-22T19:47:33.879490Z",
+          estimate_point: null,
+          name: "[EA 3.0] Feat: Drag and drop tabs",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 3,
+          sort_order: 85535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
+              created_at: "2024-07-21T19:54:13.544932Z",
+              updated_at: "2024-07-21T19:54:13.544947Z",
+              name: "Early access 3.0",
+              description: "",
+              color: "#9900ef",
+              sort_order: 85535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "fcbf904c-27ed-4062-abee-7a9fb6922710",
+          created_at: "2024-07-21T19:22:52.227978Z",
+          updated_at: "2024-07-22T19:46:22.267760Z",
+          estimate_point: null,
+          name: "[EA 3.0] Feat: Collaboration server",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 2,
+          sort_order: 75535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
+              created_at: "2024-07-21T19:54:13.544932Z",
+              updated_at: "2024-07-21T19:54:13.544947Z",
+              name: "Early access 3.0",
+              description: "",
+              color: "#9900ef",
+              sort_order: 85535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "c5a938ed-b5be-409a-afe2-c6e043d789ba",
+          created_at: "2024-07-21T19:27:14.131424Z",
+          updated_at: "2024-07-22T20:28:47.994137Z",
+          estimate_point: null,
+          name: "[EA 3.0] Text editor plugin",
+          description_html:
+            "<p>Refactor echoesmd-editor to fit the new plugin system.</p>",
+          description_stripped: null,
+          priority: "medium",
+          start_date: null,
+          target_date: null,
+          sequence_id: 10,
+          sort_order: 90000,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
+              created_at: "2024-07-21T19:54:13.544932Z",
+              updated_at: "2024-07-21T19:54:13.544947Z",
+              name: "Early access 3.0",
+              description: "",
+              color: "#9900ef",
+              sort_order: 85535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "2b018624-aaec-48d7-9c3c-05af837e3f28",
+          created_at: "2024-07-21T19:24:00.587431Z",
+          updated_at: "2024-07-23T12:58:43.958868Z",
+          estimate_point: null,
+          name: "[EA 2.0] Feat: Drag and drop files in tree",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "medium",
+          start_date: null,
+          target_date: null,
+          sequence_id: 4,
+          sort_order: 95535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "Backlog",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "763db7d9-7dfd-458f-87a9-1407757bbe40",
+          created_at: "2024-07-25T19:17:51.185715Z",
+          updated_at: "2024-07-25T19:18:56.675843Z",
+          estimate_point: null,
+          name: "[Chore] Add Setup Documentation for Cron-Worker",
+          description_html:
+            '<p>Create a setup documentation for Cron-Worker in github to make setup easier in other environments.</p><ul class="list-disc pl-7 space-y-2 tight" data-tight="true"><li class="not-prose space-y-2"><p>Env</p><ul class="list-disc pl-7 space-y-2 tight" data-tight="true"><li class="not-prose space-y-2"><p>Plane API</p></li></ul></li><li class="not-prose space-y-2"><p>D1</p><ul class="list-disc pl-7 space-y-2 tight" data-tight="true"><li class="not-prose space-y-2"><p>Schema</p></li><li class="not-prose space-y-2"><p>Init <a target="_blank" rel="noopener noreferrer nofollow" class="text-custom-primary-300 underline underline-offset-[3px] hover:text-custom-primary-500 transition-colors cursor-pointer" href="https://developers.cloudflare.com/d1/get-started/#5-run-a-query-against-your-d1-database">command</a></p></li></ul></li></ul>',
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 15,
+          sort_order: 185535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "In Progress",
+          assignees: "[]",
+          labels: [
+            {
+              id: "37501351-99ce-4b14-ad58-3bb307f361ed",
+              created_at: "2024-07-25T19:18:06.436053Z",
+              updated_at: "2024-07-25T19:18:06.436073Z",
+              name: "Chore",
+              description: "",
+              color: "#EB144C",
+              sort_order: 95535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+        {
+          id: "3314a592-94b9-4bb5-be64-6ce81b832060",
+          created_at: "2024-07-22T19:41:21.626440Z",
+          updated_at: "2024-07-25T19:18:37.259845Z",
+          estimate_point: null,
+          name: "[Website 2.0] Update website to track issues",
+          description_html: "<p></p>",
+          description_stripped: null,
+          priority: "low",
+          start_date: null,
+          target_date: null,
+          sequence_id: 14,
+          sort_order: 175535,
+          completed_at: null,
+          archived_at: null,
+          is_draft: 0,
+          created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+          project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+          workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+          parent: null,
+          state: "In Progress",
+          assignees: "[]",
+          labels: [
+            {
+              id: "4396d96e-ef82-4065-be01-7051e6fd0446",
+              created_at: "2024-07-21T19:31:21.336911Z",
+              updated_at: "2024-07-21T19:53:17.708663Z",
+              name: "Early access 2.0",
+              description: "",
+              color: "#fcb900",
+              sort_order: 65535,
+              created_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              updated_by: "64dfeada-6dc4-4963-90e7-efb73938e838",
+              project: "b5cd9845-5399-407b-bb27-d2cb90805458",
+              workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
+              parent: null,
+            },
+          ],
+        },
+      ]
+
+// Sort by state
+// 	Backlog
+// 	In Progress
+// 	Done
+// Then sort by priority within each state
+// 	High
+// 	Medium
+// 	Low
+
+const backlog = issues.filter((issue) => issue.state === "Backlog");
+const inProgress = issues.filter((issue) => issue.state === "In Progress");
+const done = issues.filter((issue) => issue.state === "Done");
+const cancelled = issues.filter((issue) => issue.state === "Cancelled");
+const todo = issues.filter((issue) => issue.state === "Todo");
+
+const getColor = (state: string) => {
+  switch (state) {
+    case "Backlog":
+      return "text-red-500";
+    case "In Progress":
+      return "text-yellow-500";
+    case "Done":
+      return "text-green-500";
+    default:
+      return "text-gray-500";
+  }
+};
+
+const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
+
 ---
 
-<Layout class:list="relative" title="Welcome to Echoesmd." description="Echoesmd. A Collaboration productivity tool. Now in Early Access 1.0">
-	<!-- Ignore Error. Astro doenst understand optional props -->
-	<EchoesUiContainer class="max-h-screen h-full aspect-video" shadow={false} border="none" size="full" tag="main">
-		<!-- Banner -->
-		<div class="h-screen flex items-center justify-center">
-			<div>
-				<div class="flex items-center flex-col" class:list={typography.normal}>
-					<svg width="220" height="65" viewBox="0 0 44 13" xmlns="http://www.w3.org/2000/svg" class="landing-banner-logo">
-						<g clip-path="url(#clip0_33_3)">
-							<path style="--i: 1" class="fill-dark dark:fill-white" d="M1.05682 12V3.27273H6.32386V4.21023H2.11364V7.15909H6.05114V8.09659H2.11364V11.0625H6.39205V12H1.05682Z"/>
-							<path style="--i: 2" class="fill-dark dark:fill-white" d="M11.5795 12.1364C10.9659 12.1364 10.4375 11.9915 9.99432 11.7017C9.55114 11.4119 9.21023 11.0128 8.97159 10.5043C8.73295 9.99574 8.61364 9.41477 8.61364 8.76136C8.61364 8.09659 8.7358 7.50994 8.98011 7.00142C9.22727 6.49006 9.57102 6.09091 10.0114 5.80398C10.4545 5.5142 10.9716 5.36932 11.5625 5.36932C12.0227 5.36932 12.4375 5.45455 12.8068 5.625C13.1761 5.79545 13.4787 6.03409 13.7145 6.34091C13.9503 6.64773 14.0966 7.00568 14.1534 7.41477H13.1477C13.071 7.11648 12.9006 6.85227 12.6364 6.62216C12.375 6.3892 12.0227 6.27273 11.5795 6.27273C11.1875 6.27273 10.8438 6.375 10.5483 6.57955C10.2557 6.78125 10.027 7.06676 9.86222 7.43608C9.70028 7.80256 9.61932 8.23295 9.61932 8.72727C9.61932 9.23295 9.69886 9.6733 9.85795 10.0483C10.0199 10.4233 10.2472 10.7145 10.5398 10.9219C10.8352 11.1293 11.1818 11.233 11.5795 11.233C11.8409 11.233 12.0781 11.1875 12.2912 11.0966C12.5043 11.0057 12.6847 10.875 12.8324 10.7045C12.9801 10.5341 13.0852 10.3295 13.1477 10.0909H14.1534C14.0966 10.4773 13.956 10.8253 13.7315 11.1349C13.5099 11.4418 13.2159 11.6861 12.8494 11.8679C12.4858 12.0469 12.0625 12.1364 11.5795 12.1364Z"/>
-							<path style="--i: 3" class="fill-dark dark:fill-white" d="M16.9261 8.0625V12H15.9205V3.27273H16.9261V6.47727H17.0114C17.1648 6.1392 17.3949 5.87074 17.7017 5.67188C18.0114 5.47017 18.4233 5.36932 18.9375 5.36932C19.3835 5.36932 19.7741 5.45881 20.1094 5.63778C20.4446 5.81392 20.7045 6.08523 20.8892 6.4517C21.0767 6.81534 21.1705 7.27841 21.1705 7.84091V12H20.1648V7.90909C20.1648 7.3892 20.0298 6.98722 19.7599 6.70312C19.4929 6.41619 19.1222 6.27273 18.6477 6.27273C18.3182 6.27273 18.0227 6.34233 17.7614 6.48153C17.5028 6.62074 17.2983 6.82386 17.1477 7.09091C17 7.35795 16.9261 7.68182 16.9261 8.0625Z"/>
-							<path style="--i: 4" class="fill-dark dark:fill-white" d="M26.5795 12.1364C25.9886 12.1364 25.4702 11.9957 25.0241 11.7145C24.581 11.4332 24.2344 11.0398 23.9844 10.5341C23.7372 10.0284 23.6136 9.4375 23.6136 8.76136C23.6136 8.07955 23.7372 7.48437 23.9844 6.97585C24.2344 6.46733 24.581 6.07244 25.0241 5.79119C25.4702 5.50994 25.9886 5.36932 26.5795 5.36932C27.1705 5.36932 27.6875 5.50994 28.1307 5.79119C28.5767 6.07244 28.9233 6.46733 29.1705 6.97585C29.4205 7.48437 29.5455 8.07955 29.5455 8.76136C29.5455 9.4375 29.4205 10.0284 29.1705 10.5341C28.9233 11.0398 28.5767 11.4332 28.1307 11.7145C27.6875 11.9957 27.1705 12.1364 26.5795 12.1364ZM26.5795 11.233C27.0284 11.233 27.3977 11.1179 27.6875 10.8878C27.9773 10.6577 28.1918 10.3551 28.331 9.98011C28.4702 9.60511 28.5398 9.19886 28.5398 8.76136C28.5398 8.32386 28.4702 7.91619 28.331 7.53835C28.1918 7.16051 27.9773 6.85511 27.6875 6.62216C27.3977 6.3892 27.0284 6.27273 26.5795 6.27273C26.1307 6.27273 25.7614 6.3892 25.4716 6.62216C25.1818 6.85511 24.9673 7.16051 24.8281 7.53835C24.6889 7.91619 24.6193 8.32386 24.6193 8.76136C24.6193 9.19886 24.6889 9.60511 24.8281 9.98011C24.9673 10.3551 25.1818 10.6577 25.4716 10.8878C25.7614 11.1179 26.1307 11.233 26.5795 11.233Z"/>
-							<path style="--i: 5" class="fill-dark dark:fill-white" d="M34.6648 12.1364C34.0341 12.1364 33.4901 11.9972 33.0327 11.7188C32.5781 11.4375 32.2273 11.0455 31.9801 10.5426C31.7358 10.0369 31.6136 9.44886 31.6136 8.77841C31.6136 8.10795 31.7358 7.51705 31.9801 7.00568C32.2273 6.49148 32.571 6.09091 33.0114 5.80398C33.4545 5.5142 33.9716 5.36932 34.5625 5.36932C34.9034 5.36932 35.2401 5.42614 35.5724 5.53977C35.9048 5.65341 36.2074 5.83807 36.4801 6.09375C36.7528 6.34659 36.9702 6.68182 37.1321 7.09943C37.294 7.51705 37.375 8.03125 37.375 8.64205V9.06818H32.3295V8.19886H36.3523C36.3523 7.82955 36.2784 7.5 36.1307 7.21023C35.9858 6.92045 35.7784 6.69176 35.5085 6.52415C35.2415 6.35653 34.9261 6.27273 34.5625 6.27273C34.1619 6.27273 33.8153 6.37216 33.5227 6.57102C33.233 6.76705 33.0099 7.02273 32.8537 7.33807C32.6974 7.65341 32.6193 7.99148 32.6193 8.35227V8.93182C32.6193 9.42614 32.7045 9.84517 32.875 10.1889C33.0483 10.5298 33.2884 10.7898 33.5952 10.9688C33.902 11.1449 34.2585 11.233 34.6648 11.233C34.929 11.233 35.1676 11.196 35.3807 11.1222C35.5966 11.0455 35.7827 10.9318 35.9389 10.7812C36.0952 10.6278 36.2159 10.4375 36.3011 10.2102L37.2727 10.483C37.1705 10.8125 36.9986 11.1023 36.7571 11.3523C36.5156 11.5994 36.2173 11.7926 35.8622 11.9318C35.5071 12.0682 35.108 12.1364 34.6648 12.1364Z"/>
-							<path style="--i: 6" class="fill-dark dark:fill-white" d="M43.5568 6.92045L42.6534 7.17614C42.5966 7.02557 42.5128 6.87926 42.402 6.73722C42.294 6.59233 42.1463 6.47301 41.9588 6.37926C41.7713 6.28551 41.5312 6.23864 41.2386 6.23864C40.8381 6.23864 40.5043 6.33097 40.2372 6.51562C39.973 6.69744 39.8409 6.92898 39.8409 7.21023C39.8409 7.46023 39.9318 7.65767 40.1136 7.80256C40.2955 7.94744 40.5795 8.06818 40.9659 8.16477L41.9375 8.40341C42.5227 8.54545 42.9588 8.76278 43.2457 9.0554C43.5327 9.34517 43.6761 9.71875 43.6761 10.1761C43.6761 10.5511 43.5682 10.8864 43.3523 11.1818C43.1392 11.4773 42.8409 11.7102 42.4574 11.8807C42.0739 12.0511 41.6278 12.1364 41.1193 12.1364C40.4517 12.1364 39.8991 11.9915 39.4616 11.7017C39.0241 11.4119 38.7472 10.9886 38.6307 10.4318L39.5852 10.1932C39.6761 10.5455 39.848 10.8097 40.1009 10.9858C40.3565 11.1619 40.6903 11.25 41.1023 11.25C41.571 11.25 41.9432 11.1506 42.2188 10.9517C42.4972 10.75 42.6364 10.5085 42.6364 10.2273C42.6364 10 42.5568 9.80966 42.3977 9.65625C42.2386 9.5 41.9943 9.38352 41.6648 9.30682L40.5739 9.05114C39.9744 8.90909 39.5341 8.68892 39.2528 8.39062C38.9744 8.08949 38.8352 7.71307 38.8352 7.26136C38.8352 6.89205 38.9389 6.56534 39.1463 6.28125C39.3565 5.99716 39.642 5.77415 40.0028 5.61222C40.3665 5.45028 40.7784 5.36932 41.2386 5.36932C41.8864 5.36932 42.3949 5.51136 42.7642 5.79545C43.1364 6.07955 43.4006 6.45455 43.5568 6.92045Z"/>
-						</g>
-					</svg>
-					<p class="font-medium text-neutral-500 text-center py-1 px-6">A Collaboration productivity tool. Now in Early Access 1.0</p>
-				</div>
-				<div class="flex gap-x-1 justify-center">
-					<!-- Ignore Error. Astro doenst understand optional props -->
-					<EchoesUiButton primary secondary={false} size="normal" hover background link="" class="rounded-full p-0 shadow-lg">
-						<a href="https://echoesmd.240284308.xyz/" class="text-sm px-3 py-1 group flex items-center">
-							Test now
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="
-								size-4
+<Layout
+  class:list="relative"
+  title="Welcome to Echoesmd."
+  description="Echoesmd. A Collaboration productivity tool. Now in Early Access 1.0"
+>
+<div>
+	{isCloudflareWorker ? (
+		<p>Built by worker</p>
+	) : (
+		<p>Not running in Cloudflare Workers environment.</p>
+	)}
+</div>
+  <EchoesUiContainer
+    class="max-h-screen h-full aspect-video"
+    shadow={false}
+    border="none"
+    size="full"
+    tag="main"
+  >
+    <!-- Banner -->
+    <div class="h-screen flex items-center justify-center">
+      <div>
+        <div class="flex items-center flex-col" class:list={typography.normal}>
+          <svg
+            width="220"
+            height="65"
+            viewBox="0 0 44 13"
+            xmlns="http://www.w3.org/2000/svg"
+            class="landing-banner-logo"
+          >
+            <g clip-path="url(#clip0_33_3)">
+              <path
+                style="--i: 1"
+                class="fill-dark dark:fill-white"
+                d="M1.05682 12V3.27273H6.32386V4.21023H2.11364V7.15909H6.05114V8.09659H2.11364V11.0625H6.39205V12H1.05682Z"
+              ></path>
+              <path
+                style="--i: 2"
+                class="fill-dark dark:fill-white"
+                d="M11.5795 12.1364C10.9659 12.1364 10.4375 11.9915 9.99432 11.7017C9.55114 11.4119 9.21023 11.0128 8.97159 10.5043C8.73295 9.99574 8.61364 9.41477 8.61364 8.76136C8.61364 8.09659 8.7358 7.50994 8.98011 7.00142C9.22727 6.49006 9.57102 6.09091 10.0114 5.80398C10.4545 5.5142 10.9716 5.36932 11.5625 5.36932C12.0227 5.36932 12.4375 5.45455 12.8068 5.625C13.1761 5.79545 13.4787 6.03409 13.7145 6.34091C13.9503 6.64773 14.0966 7.00568 14.1534 7.41477H13.1477C13.071 7.11648 12.9006 6.85227 12.6364 6.62216C12.375 6.3892 12.0227 6.27273 11.5795 6.27273C11.1875 6.27273 10.8438 6.375 10.5483 6.57955C10.2557 6.78125 10.027 7.06676 9.86222 7.43608C9.70028 7.80256 9.61932 8.23295 9.61932 8.72727C9.61932 9.23295 9.69886 9.6733 9.85795 10.0483C10.0199 10.4233 10.2472 10.7145 10.5398 10.9219C10.8352 11.1293 11.1818 11.233 11.5795 11.233C11.8409 11.233 12.0781 11.1875 12.2912 11.0966C12.5043 11.0057 12.6847 10.875 12.8324 10.7045C12.9801 10.5341 13.0852 10.3295 13.1477 10.0909H14.1534C14.0966 10.4773 13.956 10.8253 13.7315 11.1349C13.5099 11.4418 13.2159 11.6861 12.8494 11.8679C12.4858 12.0469 12.0625 12.1364 11.5795 12.1364Z"
+              ></path>
+              <path
+                style="--i: 3"
+                class="fill-dark dark:fill-white"
+                d="M16.9261 8.0625V12H15.9205V3.27273H16.9261V6.47727H17.0114C17.1648 6.1392 17.3949 5.87074 17.7017 5.67188C18.0114 5.47017 18.4233 5.36932 18.9375 5.36932C19.3835 5.36932 19.7741 5.45881 20.1094 5.63778C20.4446 5.81392 20.7045 6.08523 20.8892 6.4517C21.0767 6.81534 21.1705 7.27841 21.1705 7.84091V12H20.1648V7.90909C20.1648 7.3892 20.0298 6.98722 19.7599 6.70312C19.4929 6.41619 19.1222 6.27273 18.6477 6.27273C18.3182 6.27273 18.0227 6.34233 17.7614 6.48153C17.5028 6.62074 17.2983 6.82386 17.1477 7.09091C17 7.35795 16.9261 7.68182 16.9261 8.0625Z"
+              ></path>
+              <path
+                style="--i: 4"
+                class="fill-dark dark:fill-white"
+                d="M26.5795 12.1364C25.9886 12.1364 25.4702 11.9957 25.0241 11.7145C24.581 11.4332 24.2344 11.0398 23.9844 10.5341C23.7372 10.0284 23.6136 9.4375 23.6136 8.76136C23.6136 8.07955 23.7372 7.48437 23.9844 6.97585C24.2344 6.46733 24.581 6.07244 25.0241 5.79119C25.4702 5.50994 25.9886 5.36932 26.5795 5.36932C27.1705 5.36932 27.6875 5.50994 28.1307 5.79119C28.5767 6.07244 28.9233 6.46733 29.1705 6.97585C29.4205 7.48437 29.5455 8.07955 29.5455 8.76136C29.5455 9.4375 29.4205 10.0284 29.1705 10.5341C28.9233 11.0398 28.5767 11.4332 28.1307 11.7145C27.6875 11.9957 27.1705 12.1364 26.5795 12.1364ZM26.5795 11.233C27.0284 11.233 27.3977 11.1179 27.6875 10.8878C27.9773 10.6577 28.1918 10.3551 28.331 9.98011C28.4702 9.60511 28.5398 9.19886 28.5398 8.76136C28.5398 8.32386 28.4702 7.91619 28.331 7.53835C28.1918 7.16051 27.9773 6.85511 27.6875 6.62216C27.3977 6.3892 27.0284 6.27273 26.5795 6.27273C26.1307 6.27273 25.7614 6.3892 25.4716 6.62216C25.1818 6.85511 24.9673 7.16051 24.8281 7.53835C24.6889 7.91619 24.6193 8.32386 24.6193 8.76136C24.6193 9.19886 24.6889 9.60511 24.8281 9.98011C24.9673 10.3551 25.1818 10.6577 25.4716 10.8878C25.7614 11.1179 26.1307 11.233 26.5795 11.233Z"
+              ></path>
+              <path
+                style="--i: 5"
+                class="fill-dark dark:fill-white"
+                d="M34.6648 12.1364C34.0341 12.1364 33.4901 11.9972 33.0327 11.7188C32.5781 11.4375 32.2273 11.0455 31.9801 10.5426C31.7358 10.0369 31.6136 9.44886 31.6136 8.77841C31.6136 8.10795 31.7358 7.51705 31.9801 7.00568C32.2273 6.49148 32.571 6.09091 33.0114 5.80398C33.4545 5.5142 33.9716 5.36932 34.5625 5.36932C34.9034 5.36932 35.2401 5.42614 35.5724 5.53977C35.9048 5.65341 36.2074 5.83807 36.4801 6.09375C36.7528 6.34659 36.9702 6.68182 37.1321 7.09943C37.294 7.51705 37.375 8.03125 37.375 8.64205V9.06818H32.3295V8.19886H36.3523C36.3523 7.82955 36.2784 7.5 36.1307 7.21023C35.9858 6.92045 35.7784 6.69176 35.5085 6.52415C35.2415 6.35653 34.9261 6.27273 34.5625 6.27273C34.1619 6.27273 33.8153 6.37216 33.5227 6.57102C33.233 6.76705 33.0099 7.02273 32.8537 7.33807C32.6974 7.65341 32.6193 7.99148 32.6193 8.35227V8.93182C32.6193 9.42614 32.7045 9.84517 32.875 10.1889C33.0483 10.5298 33.2884 10.7898 33.5952 10.9688C33.902 11.1449 34.2585 11.233 34.6648 11.233C34.929 11.233 35.1676 11.196 35.3807 11.1222C35.5966 11.0455 35.7827 10.9318 35.9389 10.7812C36.0952 10.6278 36.2159 10.4375 36.3011 10.2102L37.2727 10.483C37.1705 10.8125 36.9986 11.1023 36.7571 11.3523C36.5156 11.5994 36.2173 11.7926 35.8622 11.9318C35.5071 12.0682 35.108 12.1364 34.6648 12.1364Z"
+              ></path>
+              <path
+                style="--i: 6"
+                class="fill-dark dark:fill-white"
+                d="M43.5568 6.92045L42.6534 7.17614C42.5966 7.02557 42.5128 6.87926 42.402 6.73722C42.294 6.59233 42.1463 6.47301 41.9588 6.37926C41.7713 6.28551 41.5312 6.23864 41.2386 6.23864C40.8381 6.23864 40.5043 6.33097 40.2372 6.51562C39.973 6.69744 39.8409 6.92898 39.8409 7.21023C39.8409 7.46023 39.9318 7.65767 40.1136 7.80256C40.2955 7.94744 40.5795 8.06818 40.9659 8.16477L41.9375 8.40341C42.5227 8.54545 42.9588 8.76278 43.2457 9.0554C43.5327 9.34517 43.6761 9.71875 43.6761 10.1761C43.6761 10.5511 43.5682 10.8864 43.3523 11.1818C43.1392 11.4773 42.8409 11.7102 42.4574 11.8807C42.0739 12.0511 41.6278 12.1364 41.1193 12.1364C40.4517 12.1364 39.8991 11.9915 39.4616 11.7017C39.0241 11.4119 38.7472 10.9886 38.6307 10.4318L39.5852 10.1932C39.6761 10.5455 39.848 10.8097 40.1009 10.9858C40.3565 11.1619 40.6903 11.25 41.1023 11.25C41.571 11.25 41.9432 11.1506 42.2188 10.9517C42.4972 10.75 42.6364 10.5085 42.6364 10.2273C42.6364 10 42.5568 9.80966 42.3977 9.65625C42.2386 9.5 41.9943 9.38352 41.6648 9.30682L40.5739 9.05114C39.9744 8.90909 39.5341 8.68892 39.2528 8.39062C38.9744 8.08949 38.8352 7.71307 38.8352 7.26136C38.8352 6.89205 38.9389 6.56534 39.1463 6.28125C39.3565 5.99716 39.642 5.77415 40.0028 5.61222C40.3665 5.45028 40.7784 5.36932 41.2386 5.36932C41.8864 5.36932 42.3949 5.51136 42.7642 5.79545C43.1364 6.07955 43.4006 6.45455 43.5568 6.92045Z"
+              ></path>
+            </g>
+          </svg>
+          <p class="font-medium text-neutral-500 text-center py-1 px-6">
+            A Collaboration productivity tool. Now in Early Access 1.0
+          </p>
+        </div>
+        <div class="flex gap-x-1 justify-center">
+          <EchoesUiButton
+            primary
+            secondary={false}
+            size="normal"
+            hover
+            background
+            link=""
+            class="rounded-full p-0 shadow-lg"
+          >
+            <a
+              href="https://echoesmd.240284308.xyz/"
+              class="text-sm px-3 py-1 group flex items-center"
+            >
+              Test now
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="size-4
 								group-hover:translate-y-0
 								group-hover:opacity-100
 								group-hover:max-w-6
@@ -110,18 +717,34 @@ const roadmap: Update[] = [
 								translate-y-4
 								max-w-0
 								opactiy-0
-								transition-all
-							">
-								<path fill-rule="evenodd" d="M2 4.75A2.75 2.75 0 0 1 4.75 2h3a2.75 2.75 0 0 1 2.75 2.75v.5a.75.75 0 0 1-1.5 0v-.5c0-.69-.56-1.25-1.25-1.25h-3c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h3c.69 0 1.25-.56 1.25-1.25v-.5a.75.75 0 0 1 1.5 0v.5A2.75 2.75 0 0 1 7.75 14h-3A2.75 2.75 0 0 1 2 11.25v-6.5Zm9.47.47a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 1 1-1.06-1.06l.97-.97H5.25a.75.75 0 0 1 0-1.5h7.19l-.97-.97a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-							</svg>
-						</a>
-					</EchoesUiButton>
-					<!-- Ignore Error. Astro doenst understand optional props -->
-					<EchoesUiButton primary={false} secondary={false} size="normal" hover background link="" class="rounded-full p-0 shadow-lg">
-						<a href="#roadmap" class="flex items-center text-sm group px-3 py-1">
-							Roadmap
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="
-								size-4
+								transition-all"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 4.75A2.75 2.75 0 0 1 4.75 2h3a2.75 2.75 0 0 1 2.75 2.75v.5a.75.75 0 0 1-1.5 0v-.5c0-.69-.56-1.25-1.25-1.25h-3c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h3c.69 0 1.25-.56 1.25-1.25v-.5a.75.75 0 0 1 1.5 0v.5A2.75 2.75 0 0 1 7.75 14h-3A2.75 2.75 0 0 1 2 11.25v-6.5Zm9.47.47a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 1 1-1.06-1.06l.97-.97H5.25a.75.75 0 0 1 0-1.5h7.19l-.97-.97a.75.75 0 0 1 0-1.06Z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </a>
+          </EchoesUiButton>
+          <EchoesUiButton
+            primary={false}
+            secondary={false}
+            size="normal"
+            hover
+            background
+            link=""
+            class="rounded-full p-0 shadow-lg"
+          >
+            <a
+              href="#progress-tracker"
+              class="flex items-center text-sm group px-3 py-1"
+            >
+              Progress Tracker
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="size-4
 								group-hover:translate-y-0
 								group-hover:opacity-100
 								group-hover:max-w-6
@@ -129,23 +752,89 @@ const roadmap: Update[] = [
 								translate-y-4
 								max-w-0
 								opactiy-0
-								transition-all
-							">
-								<path fill-rule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.22 3.22V2.75A.75.75 0 0 1 8 2Z" clip-rule="evenodd" />
-							</svg>						
-						</a>
-					</EchoesUiButton>
-				</div>
-			</div>
-		</div>
-		<!-- Roadmap -->
-		<div id="roadmap" class="max-w-2xl mx-auto w-screen pb-32">
-			<h1 class="text-2xl text-center">Future updates</h1>
-			<p class="text-neutral-500 text-center pb-8">Work in progress</p>
-				{roadmap.map((update) => (
-					<UpdateCard update={update} />
+								transition-all"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.75.75 0 0 1 .75.75v8.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.22 3.22V2.75A.75.75 0 0 1 8 2Z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </a>
+          </EchoesUiButton>
+        </div>
+      </div>
+    </div>
+    <!-- Progress tracker -->
+    <div id="progress-tracker" class="max-w-2xl mx-auto w-screen pb-32">
+      <h1 class="text-2xl text-center">Progress Tracker</h1>
+      <p class="text-neutral-500 text-sm text-center pb-8 max-w-screen-sm">
+        When cards are released they are archived and wont show up. List gets
+        updated every 24 hours.
+      </p>
+      <table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>State</th>
+						<th>Priority</th>
+						<th>Labels</th>
+					</tr>
+				</thead>
+				<tbody>
+        {issues.map((issue) => (
+					<tr>
+						<td>{issue.name}</td>
+						<td>{issue.state}</td>
+						<td class="capitalize">{issue.priority}</td>
+						<td>{issue.labels.map((label) => (
+							<span class:list={background.item, hover.item} class="text-white rounded-full px-2 py-1">{JSON.stringify(label)}</span>
+						))}</td>
+					</tr>
 				))}
-		</div>
-		<button class="theme-button">Toggle theme</button>
-	</EchoesUiContainer>
+				</tbody>
+      </table>
+    </div>
+    <footer>
+      <ul>
+        <li>
+          Change theme
+          <EchoesUiButton
+            primary={false}
+            secondary={false}
+            size="normal"
+            hover
+            background
+            link=""
+            class="theme-button"
+          >
+            <span class="block dark:hidden animate-[spin_500ms_ease]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.455 2.004a.75.75 0 0 1 .26.77 7 7 0 0 0 9.958 7.967.75.75 0 0 1 1.067.853A8.5 8.5 0 1 1 6.647 1.921a.75.75 0 0 1 .808.083Z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </span>
+            <span class="hidden dark:block animate-[spin_500ms_ease]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM15.657 5.404a.75.75 0 1 0-1.06-1.06l-1.061 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM6.464 14.596a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 10ZM14.596 15.657a.75.75 0 0 0 1.06-1.06l-1.06-1.061a.75.75 0 1 0-1.06 1.06l1.06 1.06ZM5.404 6.464a.75.75 0 0 0 1.06-1.06l-1.06-1.06a.75.75 0 1 0-1.061 1.06l1.06 1.06Z"
+                ></path>
+              </svg>
+            </span>
+          </EchoesUiButton>
+        </li>
+      </ul>
+    </footer>
+  </EchoesUiContainer>
 </Layout>
