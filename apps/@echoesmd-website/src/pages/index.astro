@@ -11,19 +11,19 @@ export interface Update {
   }[];
 }
 
-const type = process.argv[2];
+// const type = process.argv[2];
 // When building will get the latest issues from D1
 const issues: any[] =
-  type === "build"
-    ? await (async function () {
-        const result = await fetch(
-          "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
-        );
-        console.log("Getting issues from D1");
-        const issues: any[] = await result.json();
-        return issues
-      })()
-    : [
+  // type === "build"
+  //   ? await (async function () {
+  //       const result = await fetch(
+  //         "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
+  //       );
+  //       console.log("Getting issues from D1");
+  //       const issues: any[] = await result.json();
+  //       return issues
+  //     })(): 
+			[
         {
           id: "7a445a3d-67da-41ac-bab8-dadecc3bbf70",
           created_at: "2024-07-21T19:26:25.572608Z",
