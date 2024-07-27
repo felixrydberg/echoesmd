@@ -14,26 +14,26 @@ interface Issue {
 	id: string;
 	created_at: string;
 	updated_at: string;
-	estimate_point: number;
+	estimate_point: number | null;
 	name: string;
 	description_html: string;
-	description_stripped: string;
+	description_stripped: string | null;
 	priority: string;
-	start_date: string;
-	target_date: string;
+	start_date: string | null;
+	target_date: string | null;
 	sequence_id: number;
 	sort_order: number;
-	completed_at: string;
-	archived_at: string;
-	is_draft: boolean;
+	completed_at: string | null;
+	archived_at: string | null;
+	is_draft: 0 | 1;
 	created_by: string;
 	updated_by: string;
 	project: string;
 	workspace: string;
-	parent: string;
-	state: string;
+	parent: string | null;
+	state: string | State;
 	assignees: string[];
-	labels: string[];
+	labels: Label[];
 }
 
 interface Label {
@@ -48,7 +48,7 @@ interface Label {
 	updated_by: string;
 	project: string;
 	workspace: string;
-	parent: string;
+	parent: string | null;
 }
 
 interface State {

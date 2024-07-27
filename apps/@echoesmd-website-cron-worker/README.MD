@@ -28,11 +28,11 @@ npx wrangler d1 execute echoesmd-website --remote --file=./schema/create.sql
 ```
 ### Populating remote D1
 ```sh
-curl "https://echoesmd-website-cron-worker.felixryd.workers.dev/trigger/populate"
+curl "https://worker.echoesmd.felixrydberg.dev/trigger/populate"
 ```
 ### Getting remote Issues
 ```sh
-curl "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
+curl "https://worker.echoesmd.felixrydberg.dev/issues"
 ```
 ### Empty remote D1
 ```sh

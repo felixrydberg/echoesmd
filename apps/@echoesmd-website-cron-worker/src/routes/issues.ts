@@ -19,7 +19,7 @@ export const issues: Route = {
 
 			for (let i = 0; i < issues.results.length; i++) {
 				const issue = issues.results[i];
-				issue.state = kv[issue.state]?.name;
+				issue.state = kv[issue.state as string] as State;
 				issue.labels = JSON.parse(issue.labels as unknown as string).map((id: string) => kv[id]);
 			}
 

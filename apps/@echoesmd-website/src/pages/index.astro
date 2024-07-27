@@ -1,7 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { EchoesUiContainer, EchoesUiButton, typography, background, hover } from "@echoesmd/ui";
+import { EchoesUiContainer, EchoesUiButton, typography, background, hover, border } from "@echoesmd/ui";
 // import type { Issue } from "@echoesmd/website-cron-worker";
+import type { Issue } from "../../../@echoesmd-website-cron-worker/src/types/index.d.ts";
 
 export interface Update {
   name: string;
@@ -11,18 +12,16 @@ export interface Update {
   }[];
 }
 
-// const type = process.argv[2];
+const type = process.argv[2];
 // When building will get the latest issues from D1
-const issues: any[] =
-  // type === "build"
-  //   ? await (async function () {
-  //       const result = await fetch(
-  //         "https://echoesmd-website-cron-worker.felixryd.workers.dev/issues"
-  //       );
-  //       console.log("Getting issues from D1");
-  //       const issues: any[] = await result.json();
-  //       return issues
-  //     })(): 
+const issues: Issue[] =
+  type === "build"
+    ? await (async function () {
+        const result = await fetch("https://worker.echoesmd.felixrydberg.dev/issues");
+        console.log("Getting issues from D1");
+        const issues: Issue[] = await result.json();
+        return issues
+      })(): 
 			[
         {
           id: "7a445a3d-67da-41ac-bab8-dadecc3bbf70",
@@ -47,7 +46,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -87,7 +86,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -128,7 +127,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -169,7 +168,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -209,7 +208,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -249,7 +248,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
@@ -289,7 +288,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
@@ -329,7 +328,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -369,7 +368,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
@@ -409,7 +408,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
@@ -450,7 +449,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "abf14810-e37c-4765-94dd-7bcf45cf1a54",
@@ -490,7 +489,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "Backlog",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -531,7 +530,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "In Progress",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "37501351-99ce-4b14-ad58-3bb307f361ed",
@@ -571,7 +570,7 @@ const issues: any[] =
           workspace: "252291e3-6c2d-4fb8-8e13-bb0f7cfe0e8e",
           parent: null,
           state: "In Progress",
-          assignees: "[]",
+          assignees: [],
           labels: [
             {
               id: "4396d96e-ef82-4065-be01-7051e6fd0446",
@@ -589,38 +588,22 @@ const issues: any[] =
             },
           ],
         },
-      ]
+      ];
 
-// Sort by state
-// 	Backlog
-// 	In Progress
-// 	Done
-// Then sort by priority within each state
-// 	High
-// 	Medium
-// 	Low
+const kanban = {
+	// Replace with Issue type
+	"Backlog": [] as Issue[],
+	"Todo": [] as Issue[],
+	"In Progress": [] as Issue[],
+	"Done": [] as Issue[],
+	"Cancelled": [] as Issue[],
+}
 
-// const backlog = issues.filter((issue) => issue.state === "Backlog");
-// const inProgress = issues.filter((issue) => issue.state === "In Progress");
-// const done = issues.filter((issue) => issue.state === "Done");
-// const cancelled = issues.filter((issue) => issue.state === "Cancelled");
-// const todo = issues.filter((issue) => issue.state === "Todo");
-
-// const getColor = (state: string) => {
-//   switch (state) {
-//     case "Backlog":
-//       return "text-red-500";
-//     case "In Progress":
-//       return "text-yellow-500";
-//     case "Done":
-//       return "text-green-500";
-//     default:
-//       return "text-gray-500";
-//   }
-// };
-
-const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
-
+for (const key in kanban) {
+	const arr = issues.filter((issue) => issue.state === key)
+	arr.sort((a, b) => a.name.localeCompare(b.name));
+	kanban[key as keyof typeof kanban].push(...arr);
+}
 ---
 
 <Layout
@@ -628,13 +611,6 @@ const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
   title="Welcome to Echoesmd."
   description="Echoesmd. A Collaboration productivity tool. Now in Early Access 1.0"
 >
-<div>
-	{isCloudflareWorker ? (
-		<p>Built by worker</p>
-	) : (
-		<p>Not running in Cloudflare Workers environment.</p>
-	)}
-</div>
   <EchoesUiContainer
     class="max-h-screen h-full aspect-video"
     shadow={false}
@@ -765,35 +741,38 @@ const isCloudflareWorker = import.meta.env.CLOUDFLARE_WORKER_ENV === 'true';
       </div>
     </div>
     <!-- Progress tracker -->
-    <div id="progress-tracker" class="max-w-2xl mx-auto w-screen pb-32">
+    <div id="progress-tracker" class="w-screen pb-32">
       <h1 class="text-2xl text-center">Progress Tracker</h1>
-      <p class="text-neutral-500 text-sm text-center pb-8 max-w-screen-sm">
+      <p class="text-neutral-500 text-sm text-center pb-8">
         When cards are released they are archived and wont show up. List gets
         updated every 24 hours.
       </p>
-      <table>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>State</th>
-						<th>Priority</th>
-						<th>Labels</th>
-					</tr>
-				</thead>
-				<tbody>
-        {issues.map((issue) => (
-					<tr>
-						<td>{issue.name}</td>
-						<td>{issue.state}</td>
-						<td class="capitalize">{issue.priority}</td>
-						<td>{issue.labels.map((label: unknown) => (
-							<span class:list={[background.item, hover.item]} class="text-white rounded-full px-2 py-1">{JSON.stringify(label)}</span>
-						))}</td>
-					</tr>
-				))}
-				</tbody>
-      </table>
-    </div>
+      <!-- Kanban -->
+			<div class="flex justify-center">
+				<div class="flex overflow-x-scroll overflow-y-hidden mx-4 gap-x-2">
+					{Object.entries(kanban).map(([title, state]) => (
+						<div class="flex-col min-w-64 max-w-64 rounded-lg" class:list={border.item}>
+							<h2 class="text-lg text-center pt-4">{title}</h2>
+							<div class="p-3 flex flex-wrap gap-y-3">
+							{state.map((issue) => (
+								<div class="rounded-lg shadow-lg p-4" class:list={[background.item]}>
+									<h3 class="text-lg">{issue.name}</h3>
+									<div class="flex">
+										{issue.labels.map((label) => (
+											<div class="flex px-2 items-center gap-x-1 cursor-pointer rounded-full text-sm" class:list={[background.item, hover.item]}>
+												<span style={{background: label.color}} class="w-2 h-2 rounded-lg"></span>
+												<span class="text-white">{label.name}</span>
+											</div>
+										))}
+									</div>
+								</div>
+							))}
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
     <footer>
       <ul>
         <li>
