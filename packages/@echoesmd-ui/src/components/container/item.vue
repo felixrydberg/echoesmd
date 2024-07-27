@@ -46,7 +46,7 @@ import { twMerge } from 'tailwind-merge';
       case '2xl':
         return 'max-w-2xl mx-auto w-screen';
       case 'full':
-        return 'max-w-none mx-auto';
+        return 'max-w-full mx-auto w-screen';
     }
   }
 </script>
