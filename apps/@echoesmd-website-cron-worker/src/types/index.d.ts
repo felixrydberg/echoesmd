@@ -61,9 +61,9 @@ interface State {
 	slug: string;
 	sequence: number;
 	group: string;
-	default: boolean;
+	default: 1 | 0;
 	created_by: string;
-	updated_by: string;
+	updated_by: string | null;
 	project: string;
 	workspace: string;
 }
