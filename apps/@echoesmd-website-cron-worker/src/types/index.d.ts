@@ -8,6 +8,7 @@ interface Response<T> {
   "total_results": 1000,
   "extra_stats": null,
   "results": T[]
+	detail?: string;
 }
 
 interface Issue {
