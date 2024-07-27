@@ -4,4 +4,5 @@
 interface Env {
 	d1: D1Database;
 	PLANE_API_KEY: string;
+	WORKER_API_KEY: string;
 }

@@ -2,14 +2,14 @@
 ```sh
 cd ./apps/@echoesmd-website-cron-worker
 ```
-<!-- Replace with .example.env -->
-```sh
+<!-- ```sh
 echo "PLANE_API_KEY=<PLANE API TOKEN>" > .env
-```
+``` -->
 ```sh
 npx wrangler d1 execute echoesmd-website --local --file=./schema/create.sql
 ```
 
+## Local Environment doesnt work at the moment. Doesnt support needed Secrets
 ### Populating local D1
 ```sh
 curl "http://localhost:8787/trigger/populate"
@@ -22,6 +22,7 @@ curl "http://localhost:8787/issues"
 ```sh
 npx wrangler d1 execute echoesmd-website --local --file=./schema/empty.sql
 ```
+
 ### Updating remote D1
 ```sh
 npx wrangler d1 execute echoesmd-website --remote --file=./schema/create.sql
@@ -38,8 +39,6 @@ curl "https://worker.echoesmd.felixrydberg.dev/issues"
 ```sh
 npx wrangler d1 execute echoesmd-website --remote --file=./schema/empty.sql
 ```
-
-
 
 ## Table structures (From Plane)
 Issue

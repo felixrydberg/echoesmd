@@ -38,6 +38,19 @@ export default {
 		try {
 			const results = await getPlane(env.PLANE_API_KEY);
 			insertPlane(env.d1, results);
+
+			if (env.WORKER_API_KEY) {
+				const url = "https://api.cloudflare.com/client/v4/accounts/68b6474393e4376ff414558b27969987/pages/projects/echoesmd/deployments";
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json;charset=UTF-8",
+						"Authorization": `Bearer ${env.WORKER_API_KEY}`,
+					},
+				};
+		
+				await fetch(url, options);
+			}
 		} catch(error) {
 			console.error(error)
 		}
