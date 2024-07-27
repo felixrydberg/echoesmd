@@ -12,3 +12,4 @@ public/dist
 .npmrc
 bun.lockb
 .wrangler
+.dev.vars

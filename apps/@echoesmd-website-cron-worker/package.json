@@ -7,8 +7,8 @@
   },
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev --test-scheduled --env .dev.vars",
-    "start": "wrangler dev --test-scheduled --env .dev.vars",
+    "dev": "wrangler dev --test-scheduled",
+    "start": "wrangler dev --test-scheduled",
     "cf-typegen": "wrangler types"
   },
   "devDependencies": {

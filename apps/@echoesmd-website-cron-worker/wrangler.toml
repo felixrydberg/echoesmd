@@ -8,9 +8,6 @@ compatibility_date = "2024-07-25"
 # Configuration: https://developers.cloudflare.com/workers/wrangler/configuration/#triggers
 [triggers]
 crons = ["0 0 * * *"] # * * * * * = run every minute
-routes = [
-  {pattern = "echoesmd-website-cron-worker.felixryd.workers.dev/*", zone = "felixryd.workers.dev"}
-]
 
 [[d1_databases]]
 binding = "d1" # available in your Worker on env.DB
