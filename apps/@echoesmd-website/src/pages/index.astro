@@ -1267,7 +1267,7 @@ const getUpdateDate = () => {
                       class="rounded-lg shadow-lg p-4 w-full border-2"
                       class:list={[background.item, getColor(title)]}
                     >
-                      <h3 class="font-medium">{issue.name}</h3>
+                      <h3 class="font-medium">{issue?.name}</h3>
                       <div class="flex flex-col capitalize text-sm">
                         <div class="flex gap-x-1">
                           <span class="flex items-center gap-x-1 text-neutral-500">
@@ -1294,7 +1294,7 @@ const getUpdateDate = () => {
                                 clip-rule="evenodd"
                               />
                             </svg>
-                            {(issue.state as State).name}
+                            {(issue.state as State)?.name}
                           </span>
                         </div>
                         <div>
@@ -1336,7 +1336,7 @@ const getUpdateDate = () => {
                                     }}
                                     class="w-2 h-2 rounded-lg"
                                   />
-                                  <span class="text-nowrap">{label.name}</span>
+                                  <span class="text-nowrap">{label?.name}</span>
                                 </div>
                               ))}
                             </div>
