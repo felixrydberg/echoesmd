@@ -37,6 +37,14 @@ export default {
 	async scheduled(event, env): Promise<void> {
 		try {
 			const results = await getPlane(env.PLANE_API_KEY);
+			let length = 0;
+			for(let i = 0; i < results.length; i++) {
+				length += results[i].results.length;
+			}
+			if (length === 0) {
+				return;
+			}
+			
 			insertPlane(env.d1, results);
 
 			if (env.WORKER_API_KEY) {
