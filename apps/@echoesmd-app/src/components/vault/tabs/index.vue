@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useEchoesStore } from '../../../store/echoes';
+  import { useVaultStore } from '../../../store/vault';
   import { computed, watch } from 'vue';
   import { EchoesUiContainer } from '@echoesmd/ui';
   import EchoesFileGroup from '../file/group.vue';
@@ -7,10 +7,10 @@
   const emits = defineEmits(['update:active']);
 
   // Watch pages for changes
-  const echoes = useEchoesStore();
-  const groups = computed(() => echoes.getGroups());
+  const vault = useVaultStore();
+  const groups = computed(() => vault.getGroups);
   const handleGroupClick = (index: number) => {
-    echoes.setGroup(index);
+    vault.setGroup(index);
   }
 </script>
 

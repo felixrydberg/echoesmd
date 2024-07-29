@@ -1,192 +1,86 @@
 import { defineStore } from "pinia"
-import { AppOptions, Group, ItemPage, Vault } from "../types";
-
-const getVaultKey = <K extends keyof Vault["state"]>(
-  id: Vault["id"], 
-  state: {
-    options: AppOptions,
-    vaults: {[key: Vault["id"]]: Vault},
-  }, 
-  key: K
-): Vault["state"][K] => {
-  const vault = state.vaults[id];
-  if (!vault && state.options.openVault !== "none") {
-    throw new Error(`Vault not found`);
-  }
-  return vault?.state[key];
-};
-
-const setVaultKey = <K extends keyof Vault["state"]>(
-  id: Vault["id"],
-  state: {
-    options: AppOptions,
-    vaults: {[key: Vault["id"]]: Vault},
-  },
-  key: K,
-  value: Vault["state"][K]
-) => {
-  const vault = state.vaults[id];
-  if (!vault || state.options.openVault === "none") {
-    throw new Error(`Vault not found`);
-  }
-  vault.state[key] = value;
-};
+import { Vault } from "../types";
 
 export const useEchoesStore = defineStore('echoes', {
   state: () => {
     const state: {
-      options: AppOptions,
-      vaults: {[key: Vault["id"]]: Vault},
+      tauri: boolean,
+      theme: string,
+      vaults: Vault[],
+      openLast: boolean,
+      loading: boolean,
     } = {
-      options: {
-        tauri: false,
-        theme: 'light',
-        openVault: "none",
-        loading: false,
-      },
-      vaults: {},
+      tauri: false,
+      theme: 'light',
+      vaults: [],
+      openLast: false,
+      loading: false,
     }
     return state;
   },
   persist: true,
   getters: {
-    getOptions: (state) => {
-      return state.options;
+    getTauri: (state) => {
+      return state.tauri;
     },
-
-    getVault: (state) => {
-      return state.vaults[state.options.openVault];
+    getTheme: (state) => {
+      return state.theme;
     },
-    getVaultById: (state) => (id: Vault["id"]) => {
-      return state.vaults[id];
-    },
-    getVaults: (state) => {
+    getVaults (state) {
       return state.vaults
+        .sort((a: Vault, b: Vault) => new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime());
     },
-
-    getTree: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'tree'),
-    getTrash: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'trash'),
-    getFiles: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'files'),
-    getGroup: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'group'),
-    getGroups: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'groups'),
-    getSidebar: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'sidebar'),
-    getSynced: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'synced'),
+    getVault: (state) => (id: string) => {
+      return state.vaults.find((v: Vault) => v.id === id);
+    },
+    getOpenLast (state) {
+      return state.openLast;
+    },
+    getLoading (state) {
+      return state.loading;
+    },
   },
   actions: {
-    setOptions (options: AppOptions) {
-      if (this.options.theme !== options.theme) {
-        document.documentElement.classList.toggle('dark');
+    setTauri (value: boolean) {
+      this.tauri = value
+    },
+    setTheme (value: string) {
+      const html = document.documentElement;
+      if (value === 'dark') {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
       }
-      this.options = options;
+      this.theme = value
     },
-    
-    createVault (options: {
-      name: Vault["name"],
-      url: Vault["url"],
-      token: Vault["token"],
-      collaboration: Vault["collaboration"],
-    }) {
-      const vault = {
-        ...options,
-        id: crypto.randomUUID(),
-        lastOpened: new Date().toISOString(),
-        state: {
-          group: null,
-          groups: [],
-          tree: [],
-          trash: [],
-          files: [],
-          sidebar: true,
-          synced: true,
-        },
+    addVault (vault: Vault) {
+      this.vaults.push(vault);
+    },
+    updateVault (id: string, vault: Vault) {
+      const _vault = this.vaults.find((v: Vault) => v.id === id);
+      if (_vault) {
+        Object.assign(_vault, vault);
       }
-      this.vaults[vault.id] = vault;
-      return vault;
     },
-    updateVault (vault: Vault) {
-      this.vaults[vault.id] = vault;
-    },
-    async deleteVault(id: Vault["id"]) {
-      const vault = this.vaults[id];
-      if (vault) {
+    async removeVault(index: number) {
+      if (this.vaults[index]) {
+        const vault = this.vaults[index];
         const dbs = await indexedDB.databases();
+        
         dbs.forEach(db => {
           if (db.name && db.name?.split(':')[0] === vault.id) {
             indexedDB.deleteDatabase(db.name);
           }
         });
-        const obj = { ...this.vaults };
-        delete obj[id];
-        this.vaults = obj;
+        
+        this.vaults.splice(index, 1);
       }
     },
-
-    setTree (tree: Vault["state"]["tree"], id?: Vault["id"]) {
-      setVaultKey(id || this.options.openVault, this, 'tree', tree);
+    setOpenLast (value: boolean) {
+      this.openLast = value;
     },
-    setTrash (trash: Vault["state"]["trash"], id?: Vault["id"]) {
-      setVaultKey(id || this.options.openVault, this, 'trash', trash);
-    },
-    setFiles (files: Vault["state"]["files"], id?: Vault["id"]) {
-      setVaultKey(id || this.options.openVault, this, 'files', files);
-    },
-    setSidebar (sidebar: Vault["state"]["sidebar"], id?: Vault["id"]) {
-      setVaultKey(id || this.options.openVault, this, 'sidebar', sidebar);
-    },
-
-
-    updateTab (tab: ItemPage, id?: Vault["id"]) {
-      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      groups.forEach(group => {
-        const index = group.tabs.findIndex(x => x.id === tab.id);
-        if (index > -1) {
-          group.tabs[index] = tab;
-        }
-      });
-      setVaultKey(id || this.options.openVault, this, 'groups', groups);
-    },
-    // Updates specific group
-    updateGroup (group: Group, id?: Vault["id"]) {
-      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      const index = groups.findIndex(x => x.id === group.id);
-      if (index === -1) {
-        return;
-      }
-      groups[index] = group;
-    },
-    // Updates which group is active
-    setGroup (group: Vault["state"]["group"], id?: Vault["id"]) {
-      setVaultKey(id || this.options.openVault, this, 'group', group);
-    },
-    // Updates tabs in active group
-    setGroups (tabs: ItemPage[], id?: Vault["id"]) {
-      const groupId = getVaultKey(id || this.options.openVault, this, 'group');
-      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      const group = groups.find(x => x.id === groupId);
-      if (!group) {
-        return;
-      }
-      group.tabs = tabs;
-      setVaultKey(id || this.options.openVault, this, 'groups', groups);
-    },
-    addGroup (id?: Vault["id"]) {
-      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      const length = groups.length;
-      const group: Group = {
-        id: length,
-        active: 0,
-        name: `Group ${id}`,
-        tabs: [],
-      }
-      groups.push(group);
-      this.setGroup(group.id);
-      setVaultKey(id || this.options.openVault, this, 'groups', groups);
-    },
-    removeGroup (id: number, vaultId?: Vault["id"]) {
-      const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
-      const index = groups.findIndex(x => x.id === id);
-      groups.splice(index, 1);
-      setVaultKey(vaultId || this.options.openVault, this, 'groups', groups);
+    setLoading (value: boolean) {
+      this.loading = value;
     },
   },
 })

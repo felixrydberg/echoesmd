@@ -42,17 +42,22 @@ import { useRouter } from 'vue-router';
         console.log("Password or token missing")
         return;
       }
-    };
-    const vault = echoes.createVault({
+    }; 
+
+    const vault: Vault = {
+      id: crypto.randomUUID(),
       name: name.value,
       url: url.value,
       token: token.value,
+      // collaboration: collaboration.value ? {
+      //   password: password.value,
+      // } : false,
       collaboration: false,
-    });
-    echoes.setOptions({
-      ...echoes.getOptions,
-      openVault: vault.id,
-    });
+      lastOpened: new Date().toISOString(),
+    };
+
+    echoes.addVault(vault);
+    echoes.setOpenLast(true);
     router.push(`/${vault.id}`);
   }
 
