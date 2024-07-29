@@ -4,7 +4,6 @@ cd ./apps/@echoesmd-website-cron-worker
 ```
 ```sh
 echo 'PLANE_API_KEY="<PLANE API TOKEN>"' >> .dev.vars
-echo 'WORKER_API_KEY="<CLOUDFLARE API TOKEN>"' >> .dev.vars
 ```
 ```sh
 npx wrangler d1 execute echoesmd-website --local --file=./schema/create.sql
