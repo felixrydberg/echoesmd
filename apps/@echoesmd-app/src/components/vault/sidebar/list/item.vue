@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useInstance } from '../../../../instance';
+import { useVaultStore } from '../../../../store/vault';
 import { ItemTree } from '../../../../types';
 import { twMerge } from 'tailwind-merge';
 import tippy, { Instance, Props } from 'tippy.js';
@@ -20,13 +21,13 @@ const props = defineProps({
   },
 });
 
+const vault = useVaultStore();
 const openDropdown = ref(false);
 const edit = ref(false);
 const name = ref('');
 
 const handleItemClick = () => {
   if (props.file.type === 'page') {
-    console.log('load page');
     instance.loadPage(props.file.id);
   } else {
     openDropdown.value = !openDropdown.value;

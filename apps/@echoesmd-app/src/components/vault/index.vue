@@ -3,12 +3,15 @@
   import UiSidebar from './sidebar/index.vue';
   import  scarlettVaultTabs from './tabs/index.vue'
   import { useInstance } from '../../instance';
+  import { useVaultStore } from '../../store/vault';
   import { Vault } from '../../types';
+  import * as Y from 'yjs';
 
   import EchoesAppHeader from '../ui/header.vue'
   import { EchoesUiContainer, EchoesUiButton, background, border } from '@echoesmd/ui';
-  import { useEchoesStore } from '../../store/echoes';
-  import { useRouter } from 'vue-router';
+import { useEchoesStore } from '../../store/echoes';
+import { useRouter } from 'vue-router';
+
 
   const props = defineProps({
     name: {
@@ -17,15 +20,20 @@
     }
   });
 
-  const echoes = useEchoesStore();
-  const currentVault = computed(() => echoes.getVaultById(props.name));
-  const synced = computed(() => echoes.getSynced());
-  const sidebar = computed(() => echoes.getSidebar());
-  const groups = computed(() => echoes.getGroups());
+  const ehoces = useEchoesStore();
+  const vault = useVaultStore();
+  const currentVault = computed(() => ehoces.getVault(props.name));
+  const synced = computed(() => vault.getSynced);
+  const sidebar = computed(() => vault.getSidebar);
+  const groups = computed(() => vault.getGroups);
 
   const toggleSidebar = () => {
-    echoes.setSidebar(!sidebar.value);
+    vault.setSidebar(!sidebar.value);
   }
+
+  onUnmounted(() => {
+    vault.resetVault();
+  })
 </script>
 
 <template>
@@ -48,7 +56,7 @@
       </div>
     </echoes-app-header>
     <echoes-ui-container class="flex z-0 h-full">
-      <ui-sidebar class="transition-all duration-200" :class="sidebar ? 'translate-0 max-w-48 min-w-48' : '-translate-x-48 max-w-0'" />
+      <ui-sidebar class="transition-all duration-200" :class="sidebar ? 'translate-0 w-48' : '-translate-x-48 w-0'" />
       <scarlett-vault-tabs v-if="groups.length !== 0" />
       <div v-else class="flex items-center justify-center w-full">
         No active tabs

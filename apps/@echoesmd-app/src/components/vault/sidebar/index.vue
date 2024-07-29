@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import VaultSidebarListItem from '../../../components/vault/sidebar/list/item.vue';
 import { useInstance } from '../../../instance';
-import { computed, ref, nextTick } from 'vue';
+import { computed, ref } from 'vue';
+import { useVaultStore } from '../../../store/vault';
 import { EchoesUiContainer, EchoesUiContainerItem, EchoesUiList, EchoesUiListItem, EchoesUiButton, typography } from '@echoesmd/ui';
 import { useEchoesStore } from '../../../store/echoes';
 import { useRouter } from 'vue-router';
@@ -9,25 +10,20 @@ import EchoesUiModal from '../../ui/modal.vue';
 
 const instance = useInstance();
 
+const vault = useVaultStore();
 const echoes = useEchoesStore();
-const vault = echoes.getVaultById();
 const router = useRouter();
-const tree = computed(() => echoes.getTree());
-const files = computed(() => echoes.getFiles());
-const trash = computed(() => echoes.getTrash());
-const options = computed(() => echoes.getOptions());
+const tree = computed(() => vault.getTree);
+const files = computed(() => vault.getFiles);
+const trash = computed(() => vault.getTrash);
+const theme = computed(() => echoes.getTheme);
 
 const trashModal = ref(false);
 const settingsModal = ref(false);
 
 const handleOpenVault = () => {
+  echoes.setOpenLast(false);
   router.push('/');
-  nextTick(() => {
-    echoes.setOptions({
-      ...echoes.getOptions,
-      openVault: "none",
-    });
-  });
 }
 const handleCreateFile = () => {
   instance.createItem({
@@ -41,7 +37,6 @@ const handleCreateFile = () => {
     }
   });
 }
-
 const handleCreateFolder = () => {
   instance.createItem({
     addOptions() {
@@ -58,7 +53,7 @@ const handleCreateFolder = () => {
 
 <template>
   <echoes-ui-container class="border-t-0 border-b-0 border-l-0 border-r" border="item">
-    <div class="flex flex-col justify-between h-full w-full">
+    <div class="flex flex-col justify-between h-full">
       <echoes-ui-list class="px-2 flex flex-col gap-y-1 h-full ml-0">
         <echoes-ui-list-item class="flex gap-x-2 py-2 pb-1">
           <echoes-ui-button size="small" :class="typography.secondary" class="flex justify-center w-full transition-colors" @click="handleCreateFile">
@@ -167,7 +162,7 @@ const handleCreateFolder = () => {
                 <echoes-ui-list class="pt-4">
                   <echoes-ui-list-item class="flex items-center justify-between">
                     Change theme
-                    <echoes-ui-button @click="echoes.setOptions({...options, theme: options.theme === 'light' ? 'dark' : 'light'})">
+                    <echoes-ui-button @click="echoes.setTheme(theme === 'light' ? 'dark' : 'light')">
                       <svg class="size-4 block dark:hidden m-0 animate-[spin_500ms_ease]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                         <path d="M8 1a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 1ZM10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM12.95 4.11a.75.75 0 1 0-1.06-1.06l-1.062 1.06a.75.75 0 0 0 1.061 1.062l1.06-1.061ZM15 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 15 8ZM11.89 12.95a.75.75 0 0 0 1.06-1.06l-1.06-1.062a.75.75 0 0 0-1.062 1.061l1.061 1.06ZM8 12a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 12ZM5.172 11.89a.75.75 0 0 0-1.061-1.062L3.05 11.89a.75.75 0 1 0 1.06 1.06l1.06-1.06ZM4 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 4 8ZM4.11 5.172A.75.75 0 0 0 5.173 4.11L4.11 3.05a.75.75 0 1 0-1.06 1.06l1.06 1.06Z" />
                       </svg>

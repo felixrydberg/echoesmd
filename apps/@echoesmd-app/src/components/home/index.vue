@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref, onMounted, watch } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import EchoesAppHeader from '../ui/header.vue';
   import { EchoesUiContainer, EchoesUiList, EchoesUiListItem, EchoesUiButton, border } from '@echoesmd/ui'
   import EchoesCreateModal from './modals/create.vue';
@@ -11,43 +11,38 @@
   const createModal = ref(false);
   const echoes = useEchoesStore();
   const router = useRouter();
-  const vaultsObj = computed(() => echoes.getVaults);
-  const vaults = ref([]);
+  const vaults = computed(() => echoes.getVaults);
+
   const placeholderAlert = ref(true);
+
+  const removeVault = (index: number) => {
+    echoes.removeVault(index);
+  }
+
   const joinDemoVault = () => {
-    const vault = echoes.createVault({
+    const vault: Vault = {
+      id: 'demo-vault-echoesmd',
       name: 'Demo Vault',
       url: 'echoes-demo-server.240284308.xyz',
       token: '',
       collaboration: {
         password: 'password',
       },
-    });
-    echoes.setOptions({
-      ...echoes.getOptions,
-      openVault: vault.id,
-    });
+      lastOpened: new Date().toISOString(),
+    };
+    echoes.addVault(vault);
+    echoes.setOpenLast(true);
     router.push(`/${vault.id}`);
   }
 
   const handleOpenVault = (vault: Vault) => {
-    echoes.setOptions({
-      ...echoes.getOptions,
-      openVault: vault.id,
-    });
-    echoes.updateVault({
+    echoes.setOpenLast(true);
+    echoes.updateVault(vault.id, {
       ...vault,
       lastOpened: new Date().toISOString()
     });
     router.push(`/${vault.id}`);
   }
-
-  onMounted(() => {
-    vaults.value = Object.values(vaultsObj.value).sort((a, b) => new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime());
-  });
-  watch(vaultsObj, (newValue) => {
-    vaults.value = Object.values(newValue).sort((a, b) => new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime());
-  });
 </script>
 
 <template>
@@ -94,7 +89,7 @@
                 <echoes-ui-button @click="handleOpenVault(vault)" size="small" class="text-sm w-28 text-center">
                   Open
                 </echoes-ui-button>
-                <echoes-ui-button @click="echoes.deleteVault(vault.id)" class="text-neutral-500 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-500 absolute right-0 text-sm" :background="false" :hover="false" size="small">
+                <echoes-ui-button @click="removeVault(index)" class="text-neutral-500 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-500 absolute right-0 text-sm" :background="false" :hover="false" size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                     <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />
                   </svg>
