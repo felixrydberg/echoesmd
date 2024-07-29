@@ -20,16 +20,22 @@ export const routes: RouterOptions["routes"] = [
       const { vault } = to.params;
       const echoes = useEchoesStore();
       const instance = createEchoInstance();
-      const Vault = echoes.getVault(vault as string);
+      const Vault = echoes.getVaultById(vault as string);
       if (Vault && Vault.collaboration && instance.ws === null) {
         try {
-          echoes.setLoading(true);
+          echoes.setOptions({
+            ...echoes.getOptions,
+            loading: true,
+          });
           const { connected } = await instance.createWs(Vault);
           if (!connected) {
             const ydoc = new Y.Doc({ guid: Vault.id });
             instance.register(ydoc);
-            echoes.setLoading(false);
-            echoes.updateVault(Vault.id, { ...Vault, collaboration: {
+            echoes.setOptions({
+              ...echoes.getOptions,
+              loading: false,
+            });
+            echoes.updateVault({ ...Vault, collaboration: {
               ...Vault.collaboration,
               synced: false,
             }});
@@ -39,15 +45,20 @@ export const routes: RouterOptions["routes"] = [
           const ydoc = new Y.Doc({ guid: Vault.id });
           const { success, reason } = await instance.register(ydoc);
           if (!success && reason === "authentication_failed") {
-            echoes.setLoading(false);
-            echoes.setOpenLast(false);
+            echoes.setOptions({
+              ...echoes.getOptions,
+              openVault: "none",
+            });
             return {
               path: from.path,
             };
           }
 
-          echoes.setLoading(false);
-          echoes.updateVault(Vault.id, { ...Vault, collaboration: {
+          echoes.setOptions({
+            ...echoes.getOptions,
+            loading: false,
+          });
+          echoes.updateVault({ ...Vault, collaboration: {
             ...Vault.collaboration,
             synced: true,
           }});
