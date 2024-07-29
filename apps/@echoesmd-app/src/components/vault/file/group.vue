@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { EchoesUiButton, EchoesUiContainer, EchoesUiContainerItem } from '@echoesmd/ui';
 import { Group, ItemPage } from '../../../types';
-import { useVaultStore } from '../../../store/vault';
+import { useEchoesStore } from '../../../store/echoes';
 import { PropType, computed, handleError, ref, watch } from 'vue';
 import { useInstance } from '../../../instance';
 
@@ -11,33 +11,33 @@ import { useInstance } from '../../../instance';
       required: true
     },
   });
-  const vault = useVaultStore();
+  const echoes = useEchoesStore();
 
   const handleCreateNewGroup = () => {
-    vault.addGroup();
+    echoes.addGroup();
   }
 
   const handleRemoveGroup = () => {
-    const index = vault.getGroups.findIndex((g) => g.id === props.group.id);
+    const groups = echoes.getGroups();
+    const index = groups.findIndex((g) => g.id === props.group.id);
     if (index === -1) {
       return
     };
-    console.log(props.group.tabs)
     const tabs = [...props.group.tabs];
     tabs.forEach((tab, index) => {
       handleRemoveTab(tab, index);
     });
-    vault.removeGroup(index);
+    echoes.removeGroup(index);
     // Set vault to "next" group
-    if (vault.getGroups.length > 0) {
+    if (groups.length > 0) {
       console.log('set group to', index === 0 ? 0 : index - 1)
-      const newGroup = vault.getGroups[index === 0 ? 0 : index - 1];
-      vault.setGroup(newGroup.id);
+      const newGroup = groups[index === 0 ? 0 : index - 1];
+      echoes.setGroup(newGroup.id);
     }
   }
 
-  const groups = computed(() => vault.getGroups);
-  const activeGroup = computed(() => vault.getGroup);
+  const groups = computed(() => echoes.getGroups());
+  const activeGroup = computed(() => echoes.getGroup());
   const instance = useInstance();
 
   const handleRemoveTab = (tab: ItemPage, tabIndex: number) => {
@@ -45,7 +45,7 @@ import { useInstance } from '../../../instance';
     if (index === -1) {
       return
     };
-    vault.setGroup(index)
+    echoes.setGroup(index)
     let instances = 0;
     groups.value.forEach((group) => {
       instances += group.tabs.filter((t) => t.id === tab.id).length;
@@ -59,7 +59,7 @@ import { useInstance } from '../../../instance';
   const handleTabClick = (_group: Group, tab: ItemPage) => {
     const index = props.group.tabs.findIndex((t) => t.id === tab.id);
     if (index !== -1 && props.group.active !== index) {
-      vault.updateGroup({
+      echoes.updateGroup({
         ..._group,
         active: index
       })

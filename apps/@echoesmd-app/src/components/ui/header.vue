@@ -4,7 +4,7 @@
   import { useEchoesStore } from '../../store/echoes';
 
   const echoes = useEchoesStore();
-  const tauri = computed(() => echoes.getTauri);
+  const options = computed(() => echoes.getOptions);
   
   const handleTauri = async (value) => {
     if (value) {
@@ -31,8 +31,8 @@
     }
   }
 
-  onMounted(() => handleTauri(tauri.value));
-  watch(tauri, handleTauri);
+  onMounted(() => handleTauri(options.value.tauri));
+  watch(options, handleTauri);
 </script>
 
 <template>
@@ -46,7 +46,7 @@
       </div>
       <div class="flex flex-row-reverse gap-x-1 w-24 h-6">
         <slot name="append">
-          <template v-if="tauri">
+          <template v-if="options.tauri">
             <echoes-ui-button class="hover:text-red-500 dark:hover:text-red-500" size="small" :background="false" id="tauri-close">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                 <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />

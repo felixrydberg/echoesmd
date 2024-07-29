@@ -11,9 +11,9 @@ import {
   EchoInstanceEvents,
   Vault,
 } from "../types/index";
-import { useVaultStore } from "../store/vault";
 import { HocuspocusProvider, HocuspocusProviderWebsocket } from "@hocuspocus/provider";
 import * as Y from "yjs";
+import { useEchoesStore } from "../store/echoes";
 
 const validateInstance = (instance: EchoInstance) => {
   try {
@@ -108,38 +108,51 @@ export const createEchoInstance = (options?: Vault) => {
       app.config.globalProperties.$scarlett = instance
     },
     register: (vault: Y.Doc) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         instance.vault = vault;
-        const store = useVaultStore();
+        const store = useEchoesStore();
 
         instance.subscribe("tree:update", (...args) => store.setTree(args[0] as ItemTree[]));
         instance.subscribe("trash:update", (...args) => store.setTrash(args[0] as ItemTree[]));
         instance.subscribe("files:update", (...args) => store.setFiles(args[0] as ItemTree[]));
 
         instance.subscribe("page:loaded", (...args: unknown[]) => {
+          console.log('Page loaded', args);
           const page = args[0] as ItemPage;
-          const tabs = store.group.tabs;
+          const activeGroupId = store.getGroup();
+          const groups = store.getGroups();
+          if (groups.length === 0) {
+            store.addGroup();
+            store.setGroup(0);
+          }
+          const group = groups.find((group) => group.id === activeGroupId);
+          console.log(group);
+          if (!group) {
+            return;
+          }
+          const tabs = group.tabs;
           const arr = [...tabs];
           const index = arr.findIndex((tab) => tab.id === page.id);
           if (index > -1) {
-            store.updateGroup({...store.group, active: index});
+            store.updateGroup({...group, active: index});
           } else {
             arr.push(page);
             store.setGroups(arr);
-            const obj = {...store.group, active: arr.length - 1};
+            const obj = {...group, active: arr.length - 1};
             store.updateGroup(obj);
           }
         })
         instance.subscribe("page:unloaded", (...args: unknown[]) => {
           const page = args[0] as ItemPage;
           console.log('Page unloaded', page);
-          store.groups.forEach((group) => {
+          const groups = store.getGroups();
+          groups.forEach((group) => {
             const tabs = group.tabs;
             const arr = [...tabs];
             console.log(arr)
             const index = arr.findIndex((tab) => tab.id === page.id);
             if (index > -1) {
-              const vault = useVaultStore();
+              const vault = useEchoesStore();
               console.log(arr.toSpliced(index, 1));
               vault.updateGroup({
                 ...group,
@@ -159,10 +172,6 @@ export const createEchoInstance = (options?: Vault) => {
             const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/igm;
             const keys = Object.keys(event.target.toJSON());
             const matches = keys.join('\n').match(regex)
-            
-            const handleItem = (item: Item) => {
-            
-            }
 
             if (matches?.length === keys.length) {
               const items = event.target.toJSON() as {[key: string]: Item};
@@ -288,7 +297,7 @@ export const createEchoInstance = (options?: Vault) => {
       });
     },
     createWs: async (options: Vault) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const { url } = options;
         try {
           const maxAttempts = 3
@@ -647,8 +656,8 @@ export const createEchoInstance = (options?: Vault) => {
 
       if (instancePages[id]) {
         instancePages[id].item.name = name;
-        const vault = useVaultStore();
-        vault.updateTab({
+        const echoes = useEchoesStore();
+        echoes.updateTab({
           ...instancePages[id].item,
           ydoc: instancePages[id].ydoc,
         });

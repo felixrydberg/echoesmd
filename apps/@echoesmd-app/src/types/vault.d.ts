@@ -1,14 +1,3 @@
-interface Vault {
-  name: string;
-  url: string;
-  id: string;
-  token: string;
-  collaboration: false | {
-    password: string;
-  };
-  lastOpened: string;
-}
-
 interface ItemBase {
   type: "folder" | "page";
   name: string;
@@ -49,15 +38,7 @@ interface Tab {
   props: Record<string, unknown>;
 }
 
-interface Group {
-  id: number;
-  active: number;
-  name: string;
-  tabs: ItemPage[];
-}
-
 export {
-  Vault,
   addItem,
   ItemBase,
   ItemOptions,
@@ -65,5 +46,4 @@ export {
   ItemTree,
   ItemPage,
   Tab,
-  Group,
 }

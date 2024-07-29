@@ -15,17 +15,16 @@ app.use(router);
 app.use(ScarlettCorePlugin);
 
 const echoes = useEchoesStore();
-const autoOpen = echoes.getOpenLast;
-const theme = echoes.getTheme;
-if (theme === 'dark') {
+const options = echoes.getOptions;
+if (options.theme === 'dark') {
   document.documentElement.classList.add('dark');
 }
 
-if (autoOpen) {
-  const vaults = echoes.getVaults;
-  if (vaults.length > 0) {
-    const lastVault = vaults[0];
-    router.push(`/${lastVault.id}`)
+if (options.openVault !== "none") {
+  // [echoe-24] Get vault by id
+  const vault = echoes.getVault;
+  if (vault) {
+    router.push(`/${vault.id}`);
   }
 }
 app.mount("#app");
