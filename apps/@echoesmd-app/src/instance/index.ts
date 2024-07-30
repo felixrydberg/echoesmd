@@ -5,7 +5,7 @@ import {
   Item,
   ItemBase,
   ItemOptions,
-  ItemPage,
+  ItemTab,
   ItemTree,
   EchoInstance,
   EchoInstanceEvents,
@@ -47,7 +47,7 @@ const mergeItems = (OrderItems: {[key: string]: Item[]}) => {
 
 let activeInstance: EchoInstance | null = null;
 
-export const createEchoInstance = (options?: Vault) => {
+export const createEchoInstance = () => {
   const subscriptions: {[key: string]: (...args: unknown[]) => void} = {};
   const instanceItems: {[key: string]: Item}  = {}
   const instanceOrderItems: {[key: string]: Item[]}  = {}
@@ -72,9 +72,9 @@ export const createEchoInstance = (options?: Vault) => {
     }
 
     const yItems = ydoc.getMap('items');
-    const newDoc = new Y.Doc({meta: {type: item.type, component: item.component}, guid: item.id, shouldLoad: false})
+    const newDoc = new Y.Doc({meta: {type: item.type, component: item.component}, guid: `echoesmd:${item.id}`, shouldLoad: false})
 
-    const db = new IndexeddbPersistence(`${instance.vault?.guid}:${item.id}`, newDoc);
+    const db = new IndexeddbPersistence(`echoesmd:${instance.vault?.guid}:${item.id}`, newDoc);
     db.on("synced", db.destroy);
 
     yItems.set(item.id, newDoc);
@@ -116,52 +116,6 @@ export const createEchoInstance = (options?: Vault) => {
         instance.subscribe("trash:update", (...args) => store.setTrash(args[0] as ItemTree[]));
         instance.subscribe("files:update", (...args) => store.setFiles(args[0] as ItemTree[]));
 
-        instance.subscribe("page:loaded", (...args: unknown[]) => {
-          console.log('Page loaded', args);
-          const page = args[0] as ItemPage;
-          const activeGroupId = store.getGroup();
-          const groups = store.getGroups();
-          if (groups.length === 0) {
-            store.addGroup();
-            store.setGroup(0);
-          }
-          const group = groups.find((group) => group.id === activeGroupId);
-          console.log(group);
-          if (!group) {
-            return;
-          }
-          const tabs = group.tabs;
-          const arr = [...tabs];
-          const index = arr.findIndex((tab) => tab.id === page.id);
-          if (index > -1) {
-            store.updateGroup({...group, active: index});
-          } else {
-            arr.push(page);
-            store.setGroups(arr);
-            const obj = {...group, active: arr.length - 1};
-            store.updateGroup(obj);
-          }
-        })
-        instance.subscribe("page:unloaded", (...args: unknown[]) => {
-          const page = args[0] as ItemPage;
-          console.log('Page unloaded', page);
-          const groups = store.getGroups();
-          groups.forEach((group) => {
-            const tabs = group.tabs;
-            const arr = [...tabs];
-            console.log(arr)
-            const index = arr.findIndex((tab) => tab.id === page.id);
-            if (index > -1) {
-              const vault = useEchoesStore();
-              console.log(arr.toSpliced(index, 1));
-              vault.updateGroup({
-                ...group,
-                tabs: arr.toSpliced(index, 1),
-              });
-            }
-          });
-        })
-
         const yItemMeta = vault.getMap('items-meta');
         yItemMeta.observeDeep((events: Y.YEvent<Y.Map<Item>>[]) => {
           for (let i = 0; i < events.length; i++) {
@@ -179,7 +133,6 @@ export const createEchoInstance = (options?: Vault) => {
               const buffer: {[key: string]: Item[]} = {};
               for (const key in items) {
                 const item = items[key];
-                console.log(item)
                 if (item.deleted) {
                   trash[key] = item;
                   if (!trashBuffer[item.parent]) {
@@ -256,8 +209,10 @@ export const createEchoInstance = (options?: Vault) => {
           }
         });
 
-        const db = new IndexeddbPersistence(vault.guid, vault);
+
+        const db = new IndexeddbPersistence(`echoesmd:${vault.guid}`, vault);
         db.on("synced", async () => {
+          store.setSynced(true);
           const subdocs = Array.from(vault.getSubdocs()).map((subdoc) => `${vault.guid}:${subdoc.guid}`);
           const dbs = (await indexedDB.databases()).map((db) => db.name);
           for (let i = 0; i < dbs.length; i++) {
@@ -295,6 +250,13 @@ export const createEchoInstance = (options?: Vault) => {
           });
         }
       });
+    },
+    destroy: () => {
+      if (instance.vault) {
+        instance.vault.destroy();
+        instance.vault = null;
+      }
+      activeInstance = null;
     },
     createWs: async (options: Vault) => {
       return new Promise((resolve) => {
@@ -609,7 +571,7 @@ export const createEchoInstance = (options?: Vault) => {
       const yItems = instance.vault?.getMap('items');
       const item = trash[id];
       const page = instance.getPage(id)
-      const db = new IndexeddbPersistence(`${instance.vault?.guid}:${id}`, page?.ydoc);
+      const db = new IndexeddbPersistence(`echoesmd:${instance.vault?.guid}:${id}`, page?.ydoc);
       page?.ydoc.destroy();
       db.clearData();
       db.destroy();
@@ -653,22 +615,13 @@ export const createEchoInstance = (options?: Vault) => {
       }
       item.name = name;
       updateYMapInstance(item, instance.vault);
-
-      if (instancePages[id]) {
-        instancePages[id].item.name = name;
-        const echoes = useEchoesStore();
-        echoes.updateTab({
-          ...instancePages[id].item,
-          ydoc: instancePages[id].ydoc,
-        });
-      }
       emit('tree:update', instance.getTree());
     },
 
     getPage(id) {
       const ydoc = instance.vault?.getMap("items").get(id) as Y.Doc | null;
       if (ydoc) {
-        const page: ItemPage = {
+        const page: ItemTab = {
           ...instanceItems[id],
           ydoc: ydoc,
           component: ydoc.meta.component as string,
@@ -677,14 +630,15 @@ export const createEchoInstance = (options?: Vault) => {
       }
       return null;
     },
-    loadPage(id) {
-      const page = instance.getPage(id);
-      if (instancePages[id]) {
-        emit('page:loaded', page);
-      } else if (page) {
-        const db = new IndexeddbPersistence(`${instance.vault?.guid}:${id}`, page.ydoc);
+    async loadPage(id) {
+      return new Promise((resolve) => {
+        const page = instance.getPage(id);
+        if (!page) {
+          // [Add Alert]
+          throw new Error('Page not found');
+        }
+        const db = new IndexeddbPersistence(`echoesmd:${instance.vault?.guid}:${id}`, page.ydoc);
         instancePages[id] = {ydoc: page.ydoc, item: instanceItems[id]}
-        page.ydoc.load();
         if (instance.ws) {
           const provider = new HocuspocusProvider({
             document: page.ydoc,
@@ -694,18 +648,19 @@ export const createEchoInstance = (options?: Vault) => {
           })
           instancePages[id].provider = provider;
         }
-        const syncHandler = () => {
+        const handleSynced = () => {
           emit('page:loaded', page);
+          resolve();
         }
-        db.synced ? syncHandler() : db.once('synced', syncHandler);
-      }
+        db.synced ? handleSynced() : db.once('synced', handleSynced);
+        page.ydoc.load();
+      });
     },
     unloadPage(id) {
       const page = instance.getPage(id);
       if (page) {
         if (instance.ws) {
           const provider = instancePages[id].provider;
-          console.log(provider);
           if (provider) {
             provider.destroy();
           }

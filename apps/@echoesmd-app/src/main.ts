@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { ScarlettCorePlugin } from "./index";
+import { EchoesPlugin } from "./index";
+import Config from "../../../config.json";
 
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { routes } from './routes'
@@ -12,19 +13,32 @@ const router = createRouter({
 
 const app = createApp(App);
 app.use(router);
-app.use(ScarlettCorePlugin);
+app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
-const options = echoes.getOptions;
-if (options.theme === 'dark') {
-  document.documentElement.classList.add('dark');
-}
-
-if (options.openVault !== "none") {
-  // [echoe-24] Get vault by id
-  const vault = echoes.getVault;
-  if (vault) {
-    router.push(`/${vault.id}`);
+// Remove after Early Access
+if (echoes.version !== Config.version) {
+  const dbs = (await indexedDB.databases()).map((db) => db.name);
+  for (let i = 0; i < dbs.length; i++) {
+    const name = dbs[i];
+    if (name) {
+      indexedDB.deleteDatabase(name);
+    }
   }
+  localStorage.clear();
+  localStorage.setItem('echoesmd-migration', 'true');
+  location.reload();
+} else {
+  const options = echoes.getOptions;
+  if (options.theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+  
+  if (options.openVault !== "none") {
+    const vault = echoes.getVault;
+    if (vault) {
+      router.push(`/${vault.id}`);
+    }
+  }
+  app.mount("#app");
 }
-app.mount("#app");

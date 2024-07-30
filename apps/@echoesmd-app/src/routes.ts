@@ -35,10 +35,7 @@ export const routes: RouterOptions["routes"] = [
               ...echoes.getOptions,
               loading: false,
             });
-            echoes.updateVault({ ...Vault, collaboration: {
-              ...Vault.collaboration,
-              synced: false,
-            }});
+            echoes.updateVault({ ...Vault, collaboration: {...Vault.collaboration}, state: { ...Vault.state, synced: false } });
             return true;
           }
 
@@ -58,10 +55,7 @@ export const routes: RouterOptions["routes"] = [
             ...echoes.getOptions,
             loading: false,
           });
-          echoes.updateVault({ ...Vault, collaboration: {
-            ...Vault.collaboration,
-            synced: true,
-          }});
+          echoes.updateVault({ ...Vault, collaboration: {...Vault.collaboration}, state: {...Vault.state, synced: false} });
           return true;
         } catch (error) {
           console.log(error);
@@ -70,6 +64,7 @@ export const routes: RouterOptions["routes"] = [
       if (Vault) {
         const ydoc = new Y.Doc({ guid: Vault.id });
         instance.register(ydoc);
+        echoes.setSynced(false);
         return true;
       }
 

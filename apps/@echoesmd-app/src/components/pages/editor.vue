@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Extensions } from '../../index'
-import { ItemPage } from '../../types';
+import { ItemTab } from '../../types';
 import { PropType, toRaw } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import Collaboration from '@tiptap/extension-collaboration';
@@ -11,12 +11,14 @@ import TableRow from '@tiptap/extension-table-row'
 
 const props = defineProps({
   page: {
-    type: Object as PropType<ItemPage>,
+    type: Object as PropType<ItemTab>,
     required: true,
   },
 })
 
 const ydoc = toRaw(props.page.ydoc);
+console.log(props.page);
+console.log(ydoc);
 const fragment = ydoc.getXmlFragment('content');
 const editor = useEditor({
   content: '',

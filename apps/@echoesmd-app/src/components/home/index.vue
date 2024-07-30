@@ -7,12 +7,15 @@
   import { useRouter } from 'vue-router';
   import { Vault } from '../../types';
   import { formatDate } from '../../utils/index';
+  import { useInstance } from '../../instance';
 
   const createModal = ref(false);
   const echoes = useEchoesStore();
   const router = useRouter();
   const vaultsObj = computed(() => echoes.getVaults);
-  const vaults = ref([]);
+  const vaults = ref<Vault[]>([]);
+  const migrationAlert = ref(localStorage.getItem('echoes-migration') === 'true');
+  localStorage.setItem('echoes-migration', 'false');
   const placeholderAlert = ref(true);
   const joinDemoVault = () => {
     const vault = echoes.createVault({
@@ -48,6 +51,9 @@
   watch(vaultsObj, (newValue) => {
     vaults.value = Object.values(newValue).sort((a, b) => new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime());
   });
+  const testClick = () => {
+    console.log(useInstance());
+  }
 </script>
 
 <template>
@@ -55,18 +61,33 @@
     <echoes-app-header>
     </echoes-app-header>
     <div class="relative h-0 w-full">
-      <!-- Placeholder Alert -->
-      <div v-show="placeholderAlert" class="absolute left-1/2 -translate-x-1/2 text-white bg-red-500 max-w-screen-lg rounded px-3 py-4 w-full flex items-center justify-between">
-        <div>
-          <span class="font-bold uppercase">Alert: </span>
-          <span class="text-sm">This is early an access software application. Changes are going to be made to both the UI & Data structure. Do not store information that will need to persist between updates.</span>
+      <div class="absolute left-1/2 -translate-x-1/2 flex flex-col gap-y-1">
+        <!-- Placeholder Alert -->
+        <div v-show="placeholderAlert" class="text-white bg-red-500 max-w-screen-lg rounded px-3 py-4 w-full flex items-center justify-between">
+          <div>
+            <span class="font-bold uppercase">Alert: </span>
+            <span class="text-sm">This is early an access software application. Changes are going to be made to both the UI & Data structure. Do not store information that will need to persist between updates.</span>
+          </div>
+          <echoes-ui-button @click="placeholderAlert = false" :background="false" :hover="false" class="text-sm" size="small">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+            </svg>
+          </echoes-ui-button>
         </div>
-        <echoes-ui-button @click="placeholderAlert = false" :background="false" :hover="false" class="text-sm" size="small">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-          </svg>
-        </echoes-ui-button>
-      </div>
+        
+        <!-- Migration Alert -->
+         <div v-show="migrationAlert" class="text-white bg-amber-500 max-w-screen-lg rounded px-3 py-4 w-full flex items-center justify-between">
+           <div>
+             <span class="font-bold uppercase">Alert: </span>
+             <span class="text-sm">You have been migrated from an older version. This means that your old vaults were removed. Sorry for the inconvenience</span>
+           </div>
+           <echoes-ui-button @click="placeholderAlert = false" :background="false" :hover="false" class="text-sm" size="small">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+               <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+             </svg>
+           </echoes-ui-button>
+         </div>
+       </div>
     </div>
     <div class="flex justify-center items-center h-full">
       <echoes-ui-container size="lg" class="flex flex-col w-full gap-y-4 text-center">
@@ -82,7 +103,7 @@
                 <path style="--i: 6" class="fill-dark dark:fill-white" d="M43.5568 6.92045L42.6534 7.17614C42.5966 7.02557 42.5128 6.87926 42.402 6.73722C42.294 6.59233 42.1463 6.47301 41.9588 6.37926C41.7713 6.28551 41.5312 6.23864 41.2386 6.23864C40.8381 6.23864 40.5043 6.33097 40.2372 6.51562C39.973 6.69744 39.8409 6.92898 39.8409 7.21023C39.8409 7.46023 39.9318 7.65767 40.1136 7.80256C40.2955 7.94744 40.5795 8.06818 40.9659 8.16477L41.9375 8.40341C42.5227 8.54545 42.9588 8.76278 43.2457 9.0554C43.5327 9.34517 43.6761 9.71875 43.6761 10.1761C43.6761 10.5511 43.5682 10.8864 43.3523 11.1818C43.1392 11.4773 42.8409 11.7102 42.4574 11.8807C42.0739 12.0511 41.6278 12.1364 41.1193 12.1364C40.4517 12.1364 39.8991 11.9915 39.4616 11.7017C39.0241 11.4119 38.7472 10.9886 38.6307 10.4318L39.5852 10.1932C39.6761 10.5455 39.848 10.8097 40.1009 10.9858C40.3565 11.1619 40.6903 11.25 41.1023 11.25C41.571 11.25 41.9432 11.1506 42.2188 10.9517C42.4972 10.75 42.6364 10.5085 42.6364 10.2273C42.6364 10 42.5568 9.80966 42.3977 9.65625C42.2386 9.5 41.9943 9.38352 41.6648 9.30682L40.5739 9.05114C39.9744 8.90909 39.5341 8.68892 39.2528 8.39062C38.9744 8.08949 38.8352 7.71307 38.8352 7.26136C38.8352 6.89205 38.9389 6.56534 39.1463 6.28125C39.3565 5.99716 39.642 5.77415 40.0028 5.61222C40.3665 5.45028 40.7784 5.36932 41.2386 5.36932C41.8864 5.36932 42.3949 5.51136 42.7642 5.79545C43.1364 6.07955 43.4006 6.45455 43.5568 6.92045Z"/>
               </g>
             </svg>
-            <p class="text-sm font-medium text-neutral-500 pt-1">Early Access Version 1.0.0</p>
+            <p class="text-sm font-medium text-neutral-500 pt-1">Early Access Version 1.2.0</p>
           </div>
           <div class="flex flex-col-reverse w-fit">
             <echoes-ui-list class="text-start">

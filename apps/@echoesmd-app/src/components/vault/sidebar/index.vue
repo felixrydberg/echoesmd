@@ -10,12 +10,11 @@ import EchoesUiModal from '../../ui/modal.vue';
 const instance = useInstance();
 
 const echoes = useEchoesStore();
-const vault = echoes.getVaultById();
 const router = useRouter();
 const tree = computed(() => echoes.getTree());
 const files = computed(() => echoes.getFiles());
 const trash = computed(() => echoes.getTrash());
-const options = computed(() => echoes.getOptions());
+const options = computed(() => echoes.getOptions);
 
 const trashModal = ref(false);
 const settingsModal = ref(false);

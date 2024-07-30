@@ -1,13 +1,13 @@
 export * from './extensions/index';
 import { App } from 'vue';
-import editor from './components/common/editor.vue';
+import editor from './components/pages/editor.vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import './style/index.css';
 
-export const ScarlettCorePlugin = {
+export const EchoesPlugin = {
   async install(app: App) {
-    console.debug('[Scarlett-md] Plugin installed');
+    console.debug('[Echoesmd] Plugin installed');
     app.component('echoesmd-editor', editor);
       
     const pinia = createPinia();

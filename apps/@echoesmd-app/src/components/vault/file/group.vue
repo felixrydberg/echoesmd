@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { EchoesUiButton, EchoesUiContainer, EchoesUiContainerItem } from '@echoesmd/ui';
-import { Group, ItemPage } from '../../../types';
-import { useEchoesStore } from '../../../store/echoes';
-import { PropType, computed, handleError, ref, watch } from 'vue';
-import { useInstance } from '../../../instance';
+  import { Group, ItemTab } from '../../../types';
+  import { useEchoesStore } from '../../../store/echoes';
+  import { PropType, computed, handleError, ref, watch } from 'vue';
+  import WrapperVue from '../../pages/wrapper.vue';
 
   const props = defineProps({
     group: {
@@ -12,11 +12,9 @@ import { useInstance } from '../../../instance';
     },
   });
   const echoes = useEchoesStore();
-
   const handleCreateNewGroup = () => {
     echoes.addGroup();
   }
-
   const handleRemoveGroup = () => {
     const groups = echoes.getGroups();
     const index = groups.findIndex((g) => g.id === props.group.id);
@@ -24,39 +22,20 @@ import { useInstance } from '../../../instance';
       return
     };
     const tabs = [...props.group.tabs];
-    tabs.forEach((tab, index) => {
-      handleRemoveTab(tab, index);
+    tabs.forEach((tab) => {
+      handleRemoveTab(tab);
     });
-    echoes.removeGroup(index);
-    // Set vault to "next" group
-    if (groups.length > 0) {
-      console.log('set group to', index === 0 ? 0 : index - 1)
-      const newGroup = groups[index === 0 ? 0 : index - 1];
-      echoes.setGroup(newGroup.id);
-    }
+    echoes.removeGroup(props.group.id);
+    console.log(index)
+    echoes.setActiveGroup(groups[0].id)
   }
 
+  const active = computed(() => echoes.getGroup());
   const groups = computed(() => echoes.getGroups());
-  const activeGroup = computed(() => echoes.getGroup());
-  const instance = useInstance();
-
-  const handleRemoveTab = (tab: ItemPage, tabIndex: number) => {
-    const index = groups.value.findIndex((g) => g.id === props.group.id);
-    if (index === -1) {
-      return
-    };
-    echoes.setGroup(index)
-    let instances = 0;
-    groups.value.forEach((group) => {
-      instances += group.tabs.filter((t) => t.id === tab.id).length;
-    });
-    if (instances === 1) {
-      instance.unloadPage(tab.id);
-    } else {
-      activeGroup.value.tabs.splice(tabIndex, 1);
-    }
+  const handleRemoveTab = (tab: ItemTab) => {
+    echoes.removeTab(tab.id, props.group.id);
   }
-  const handleTabClick = (_group: Group, tab: ItemPage) => {
+  const handleTabClick = (_group: Group, tab: ItemTab) => {
     const index = props.group.tabs.findIndex((t) => t.id === tab.id);
     if (index !== -1 && props.group.active !== index) {
       echoes.updateGroup({
@@ -68,16 +47,16 @@ import { useInstance } from '../../../instance';
 </script>
 
 <template>
-  <echoes-ui-container class="flex items-center justify-between p-1">
+  <echoes-ui-container class="flex items-center justify-between p-1 w-full">
     <div class="flex gap-x-1">
       <echoes-ui-container-item
         v-for="(tab, yindex) in props.group.tabs"
         @click.stop="handleTabClick(props.group, tab)"
-        class="flex items-center gap-x-1 w-full p-1 rounded text-sm"
+        class="flex items-center gap-x-1 w-full p-1 rounded text-xs"
         :class="{ 'bg-gray-200 dark:bg-neutral-800': props.group.active === yindex }"
       >
         {{ tab.name }}
-        <echoes-ui-button :background="false" :hover="false" @click.stop="handleRemoveTab(tab, yindex)" class="text-xs p-0" title="Remove tab">
+        <echoes-ui-button :background="false" :hover="false" @click.stop="handleRemoveTab(tab)" class="text-xs p-0" title="Remove tab">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
             <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />
           </svg>
@@ -98,7 +77,9 @@ import { useInstance } from '../../../instance';
     </div>
   </echoes-ui-container>
   <div class="h-full">
-    <component class="h-full" v-if="props.group.tabs[props.group.active]?.component" @click.stop :is="props.group.tabs[props.group.active].component" v-bind="{ page: props.group.tabs[props.group.active] }" :key="props.group.tabs[props.group.active].id" />
+    <wrapper-vue v-if="props.group.tabs[props.group.active]?.component" v-bind="{ page: props.group.tabs[props.group.active] }" :key="props.group.tabs[props.group.active].id">
+      <component class="h-full" @click.stop :is="props.group.tabs[props.group.active].component" v-bind="{ page: props.group.tabs[props.group.active] }" :key="props.group.tabs[props.group.active].id" />
+    </wrapper-vue>
     <div class="flex justify-center items-center h-full" v-else>
       <span class="-mt-32">
         No active tab

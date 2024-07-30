@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { AppOptions, Group, ItemPage, Vault } from "../types";
+import { AppOptions, Group, ItemTab, Vault } from "../types";
 
 const getVaultKey = <K extends keyof Vault["state"]>(
   id: Vault["id"], 
@@ -13,6 +13,10 @@ const getVaultKey = <K extends keyof Vault["state"]>(
   if (!vault && state.options.openVault !== "none") {
     throw new Error(`Vault not found`);
   }
+  if (state.options.openVault === "none") {
+    throw new Error(`No vault open`);
+  }
+
   return vault?.state[key];
 };
 
@@ -35,9 +39,11 @@ const setVaultKey = <K extends keyof Vault["state"]>(
 export const useEchoesStore = defineStore('echoes', {
   state: () => {
     const state: {
+      version: string,
       options: AppOptions,
       vaults: {[key: Vault["id"]]: Vault},
     } = {
+      version: "1.2.0_early-access",
       options: {
         tauri: false,
         theme: 'light',
@@ -133,18 +139,56 @@ export const useEchoesStore = defineStore('echoes', {
     setSidebar (sidebar: Vault["state"]["sidebar"], id?: Vault["id"]) {
       setVaultKey(id || this.options.openVault, this, 'sidebar', sidebar);
     },
+    setSynced (synced: Vault["state"]["synced"], id?: Vault["id"]) {
+      setVaultKey(id || this.options.openVault, this, 'synced', synced);
+    },
 
-
-    updateTab (tab: ItemPage, id?: Vault["id"]) {
+    addTab (tab: ItemTab, id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      groups.forEach(group => {
-        const index = group.tabs.findIndex(x => x.id === tab.id);
-        if (index > -1) {
-          group.tabs[index] = tab;
-        }
-      });
+      if (groups.length === 0) {
+        this.addGroup();
+      }
+      const group = groups.find(x => x.id === getVaultKey(id || this.options.openVault, this, 'group'));
+      if (!group) {
+        return;
+      }
+      group.tabs.push(tab);
       setVaultKey(id || this.options.openVault, this, 'groups', groups);
     },
+    // Mostly used to fix issue with Pinia persistance messing up Ydoc
+    updateTab (tab: ItemTab, id?: Vault["id"]) {
+      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
+      // Update tab in all groups
+      for (let i = 0; i < groups.length; i++) {
+        const group = groups[i];
+        const index = group.tabs.findIndex(x => x.id === tab.id);
+        if (index !== -1) {
+          group.tabs[index] = tab;
+        }
+      }
+      // setVaultKey(id || this.options.openVault, this, 'groups', groups);
+    },
+    removeTab (id: ItemTab["id"], groupId?: Group["id"], vaultId?: Vault["id"]) {
+      const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
+      const group = groups.find(x => x.id === groupId);
+      if (!group) {
+        return;
+      }
+      const index = group.tabs.findIndex(x => x.id === id);
+      group.tabs.splice(index, 1);
+      setVaultKey(vaultId || this.options.openVault, this, 'groups', groups);
+    },
+    getTab (id: ItemTab["id"], vaultId?: Vault["id"]) {
+      const tabs: ItemTab[] = []
+      const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
+      for (let i = 0; i < groups.length; i++) {
+        const group = groups[i];
+        tabs.push(...group.tabs);
+      }
+
+      return tabs.find(x => x.id === id);
+    },
+
     // Updates specific group
     updateGroup (group: Group, id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
@@ -155,34 +199,23 @@ export const useEchoesStore = defineStore('echoes', {
       groups[index] = group;
     },
     // Updates which group is active
-    setGroup (group: Vault["state"]["group"], id?: Vault["id"]) {
+    setActiveGroup (group: Vault["state"]["group"], id?: Vault["id"]) {
+      console.log('setActiveGroup', group);
       setVaultKey(id || this.options.openVault, this, 'group', group);
-    },
-    // Updates tabs in active group
-    setGroups (tabs: ItemPage[], id?: Vault["id"]) {
-      const groupId = getVaultKey(id || this.options.openVault, this, 'group');
-      const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      const group = groups.find(x => x.id === groupId);
-      if (!group) {
-        return;
-      }
-      group.tabs = tabs;
-      setVaultKey(id || this.options.openVault, this, 'groups', groups);
     },
     addGroup (id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
-      const length = groups.length;
       const group: Group = {
-        id: length,
+        id: crypto.randomUUID(),
         active: 0,
         name: `Group ${id}`,
         tabs: [],
       }
       groups.push(group);
-      this.setGroup(group.id);
+      this.setActiveGroup(group.id);
       setVaultKey(id || this.options.openVault, this, 'groups', groups);
     },
-    removeGroup (id: number, vaultId?: Vault["id"]) {
+    removeGroup (id: Group["id"], vaultId?: Vault["id"]) {
       const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
       const index = groups.findIndex(x => x.id === id);
       groups.splice(index, 1);
