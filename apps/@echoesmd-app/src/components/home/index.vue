@@ -14,6 +14,7 @@
   const router = useRouter();
   const vaultsObj = computed(() => echoes.getVaults);
   const vaults = ref<Vault[]>([]);
+  console.log(localStorage.getItem('echoes-migration') === 'true')
   const migrationAlert = ref(localStorage.getItem('echoes-migration') === 'true');
   localStorage.setItem('echoes-migration', 'false');
   const placeholderAlert = ref(true);
