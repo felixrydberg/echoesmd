@@ -24,10 +24,6 @@ export const insertPlane = async (d1: D1Database, results: [Response<Label>, Res
   `;
 	// Validate result and insert into D1
 	const [labels, issues, states] = results.map((result) => result.results) as [Label[], Issue[], State[]];
-	// Empty tables
-	d1.exec('DELETE FROM Labels');
-	d1.exec('DELETE FROM Issues');
-	d1.exec('DELETE FROM States');
 
 	for (const label of labels) {
 		if (!label.id) {

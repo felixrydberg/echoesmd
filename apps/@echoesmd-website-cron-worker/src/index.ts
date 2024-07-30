@@ -45,7 +45,7 @@ export default {
 				return;
 			}
 			
-			insertPlane(env.d1, results);
+			await insertPlane(env.d1, results);
 
 			if (env.WORKER_API_KEY) {
 				const url = "https://api.cloudflare.com/client/v4/accounts/68b6474393e4376ff414558b27969987/pages/projects/echoesmd/deployments";
