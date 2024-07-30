@@ -18,16 +18,18 @@ app.use(EchoesPlugin);
 const echoes = useEchoesStore();
 // Remove after Early Access
 if (echoes.version !== Config.version) {
-  const dbs = (await indexedDB.databases()).map((db) => db.name);
-  for (let i = 0; i < dbs.length; i++) {
-    const name = dbs[i];
-    if (name) {
-      indexedDB.deleteDatabase(name);
+  indexedDB.databases().then((databases) => {
+    const dbs = databases.map((db) => db.name);
+    for (let i = 0; i < dbs.length; i++) {
+      const name = dbs[i];
+      if (name) {
+        indexedDB.deleteDatabase(name);
+      }
     }
-  }
-  localStorage.clear();
-  localStorage.setItem('echoesmd-migration', 'true');
-  location.reload();
+    localStorage.clear();
+    localStorage.setItem('echoesmd-migration', 'true');
+    location.reload();
+  });
 } else {
   const options = echoes.getOptions;
   if (options.theme === 'dark') {
