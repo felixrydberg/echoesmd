@@ -1,6 +1,6 @@
 import { App } from "vue";
 import * as Y from "yjs";
-import { addItem, ItemBase, Item, ItemOptions, ItemTree, ItemPage } from "./vault";
+import { addItem, ItemBase, Item, ItemOptions, ItemTree, ItemTab } from "./vault";
 
 type EchoInstanceEvents = 
 "page:loaded" |
@@ -24,6 +24,7 @@ interface EchoInstance {
   ws: WebsocketProvider | null,
   install: (app: App) => void,
   register: (vault: Y.Doc) => Promise<{success: boolean, reason?: string}>,
+  destroy: () => void,
   createWs: (options: Vault) => Promise<{connected: boolean, message: string | unknown}>,
   subscribe: (event: EchoInstanceEvents, callback: (...args: unknown[]) => void) => void,
   unsubscribe: (event: EchoInstanceEvents, callback: (...args: unknown[]) => void) => void,
@@ -41,8 +42,8 @@ interface EchoInstance {
   getItem: (id: string) => Item | null,
   updateItemName: (id: string, name: string) => void,
 
-  getPage: (id: string) => ItemPage | null,
-  loadPage: (id: string) => void,
+  getPage: (id: string) => ItemTab | null,
+  loadPage: (id: string) => Promise<void>,
   unloadPage: (id: string) => void,
 }
 

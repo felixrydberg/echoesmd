@@ -28,7 +28,7 @@ interface ItemTree extends Item {
   children?: ItemTree[];
 }
 
-interface ItemPage extends Item {
+interface ItemTab extends Item {
   ydoc: Y.Doc;
 }
 
@@ -44,6 +44,6 @@ export {
   ItemOptions,
   Item,
   ItemTree,
-  ItemPage,
+  ItemTab,
   Tab,
 }

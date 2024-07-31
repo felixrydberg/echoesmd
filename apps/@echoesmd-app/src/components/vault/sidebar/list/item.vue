@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useInstance } from '../../../../instance';
+import { useEchoesStore } from '../../../../store/echoes';
 import { ItemTree } from '../../../../types';
 import { twMerge } from 'tailwind-merge';
 import tippy, { Instance, Props } from 'tippy.js';
@@ -23,11 +24,15 @@ const props = defineProps({
 const openDropdown = ref(false);
 const edit = ref(false);
 const name = ref('');
+const instance = useInstance();
+const echoes = useEchoesStore();
 
 const handleItemClick = () => {
   if (props.file.type === 'page') {
-    console.log('load page');
-    instance.loadPage(props.file.id);
+    const tab = instance.getPage(props.file.id);
+    if (tab) {
+      echoes.addTab(tab);
+    }
   } else {
     openDropdown.value = !openDropdown.value;
   }
@@ -130,6 +135,14 @@ const createTippy = (button: HTMLElement) => {
     });
   });
   trashButton.addEventListener("click", () => {
+    // Remove from all groups
+    const groups = echoes.getGroups();
+    for (const group of groups) {
+      const index = group.tabs.findIndex((tab) => tab.id === props.file.id);
+      if (index !== -1) {
+        echoes.removeTab(group.tabs[index], group.id);
+      }
+    }
     instance.trashItem(props.file.id);
     _tippyInstance.hide();
   });
@@ -181,8 +194,6 @@ watch(edit, (value) => {
     }
   });
 })
-
-const instance = useInstance();
 </script>
 
 <template>

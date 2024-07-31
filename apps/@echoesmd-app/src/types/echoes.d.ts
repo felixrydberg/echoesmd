@@ -1,9 +1,9 @@
 interface Group {
-  id: number;
+  id: string;
   // Index of which tab is active
   active: number;
   name: string;
-  tabs: ItemPage[];
+  tabs: ItemTab[];
 }
 
 interface Vault {

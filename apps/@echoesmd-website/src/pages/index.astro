@@ -13,6 +13,7 @@ import type {
   Issue,
   State,
 } from "../../../@echoesmd-website-cron-worker/src/types/index.d.ts";
+import Config from '../../../../config.json';
 
 export interface Update {
   name: string;
@@ -68,7 +69,7 @@ const getUpdateDate = () => {
 <Layout
   class:list="relative"
   title="Welcome to Echoesmd."
-  description="Echoesmd. A Collaboration productivity tool. Now in Early Access 1.0"
+  description={`Echoesmd. A Collaboration productivity tool. Now in Early Access ${Config["version-label"]}`}
 >
   <EchoesUiContainer
     class="max-h-screen h-full aspect-video"
@@ -122,7 +123,7 @@ const getUpdateDate = () => {
             </g>
           </svg>
           <p class="font-medium text-neutral-500 text-center py-1 px-6">
-            A Collaboration productivity tool. Now in Early Access 1.0
+            A Collaboration productivity tool. Now in Early Access {Config["version-label"]}
           </p>
         </div>
         <div class="flex gap-x-1 justify-center">
