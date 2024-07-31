@@ -12,15 +12,14 @@ const router = createRouter({
   routes,
 })
 
-const oldEchoes = JSON.parse(localStorage.getItem('echoes') || '{}');
-console.log(oldEchoes);
 const app = createApp(App);
 app.use(router);
 app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
+// Will only return 1.1  and below stores. Future stores are version locked.
+const oldEchoes = JSON.parse(localStorage.getItem('echoes') || '{}');
 if (oldEchoes.version !== Config["version-label"]) {
-  // Move vaults
   for (let i = 0; i < oldEchoes.vaults.length; i++) {
     const oldVault: {
       id: string;
@@ -53,7 +52,6 @@ if (oldEchoes.version !== Config["version-label"]) {
     echoes.addVault(vault);
     localStorage.removeItem('echoes');
   
-    // Move Options
     echoes.setOptions({
       theme: oldEchoes.theme,
       openVault: oldEchoes.openVault,
