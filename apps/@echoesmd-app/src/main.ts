@@ -19,7 +19,8 @@ app.use(router);
 app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
-if (oldEchoes.version !== Config["version-label"] && oldEchoes.vaults) {
+if (oldEchoes.version !== Config["version-label"]) {
+  // Move vaults
   for (let i = 0; i < oldEchoes.vaults.length; i++) {
     const oldVault: {
       id: string;
@@ -51,6 +52,14 @@ if (oldEchoes.version !== Config["version-label"] && oldEchoes.vaults) {
     }
     echoes.addVault(vault);
     localStorage.removeItem('echoes');
+  
+    // Move Options
+    echoes.setOptions({
+      theme: oldEchoes.theme,
+      openVault: oldEchoes.openVault,
+      loading: oldEchoes.loading,
+      tauri: oldEchoes.tauri,
+    });
   }
 }
 
