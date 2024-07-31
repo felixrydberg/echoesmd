@@ -17,14 +17,27 @@
   const vaults = ref<Vault[]>([]);
   const placeholderAlert = ref(true);
   const joinDemoVault = () => {
-    const vault = echoes.createVault({
+    const vault = {
+      id: 'demo-vault-echoesmd',
       name: 'Demo Vault',
       url: 'echoes-demo-server.240284308.xyz',
       token: '',
       collaboration: {
         password: 'password',
+        synced: false,
       },
-    });
+      lastOpened: new Date().toISOString(),
+      state: {
+        tree: [],
+        trash: [],
+        files: [],
+        group: null,
+        groups: [],
+        sidebar: true,
+        synced: false,
+      },
+    };
+    echoes.addVault(vault);
     echoes.setOptions({
       ...echoes.getOptions,
       openVault: vault.id,
