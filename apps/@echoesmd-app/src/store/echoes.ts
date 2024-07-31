@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import { AppOptions, Group, ItemTab, Vault } from "../types";
+import Config from '../../../../config.json';
 
 const getVaultKey = <K extends keyof Vault["state"]>(
   id: Vault["id"], 
@@ -36,7 +37,7 @@ const setVaultKey = <K extends keyof Vault["state"]>(
   vault.state[key] = value;
 };
 
-export const useEchoesStore = defineStore('echoes', {
+export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
   state: () => {
     const state: {
       version: string,
@@ -108,6 +109,9 @@ export const useEchoesStore = defineStore('echoes', {
       }
       this.vaults[vault.id] = vault;
       return vault;
+    },
+    addVault (vault: Vault) {
+      this.vaults[vault.id] = vault
     },
     updateVault (vault: Vault) {
       this.vaults[vault.id] = vault;

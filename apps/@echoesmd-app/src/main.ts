@@ -1,46 +1,68 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import { EchoesPlugin } from "./index";
-import Config from "../../../config.json";
 
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { routes } from './routes'
 import { useEchoesStore } from "./store/echoes";
+import { Vault } from "./types";
+import Config from '../../../config.json';
 const router = createRouter({
   history: createMemoryHistory(),
   routes,
 })
 
+const oldEchoes = JSON.parse(localStorage.getItem('echoes') || '{}');
+console.log(oldEchoes);
 const app = createApp(App);
 app.use(router);
 app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
-// Remove after Early Access
-if (echoes.version !== Config.version) {
-  indexedDB.databases().then((databases) => {
-    const dbs = databases.map((db) => db.name);
-    for (let i = 0; i < dbs.length; i++) {
-      const name = dbs[i];
-      if (name) {
-        indexedDB.deleteDatabase(name);
+if (oldEchoes.version !== Config["version-label"] && oldEchoes.vaults) {
+  for (let i = 0; i < oldEchoes.vaults.length; i++) {
+    const oldVault: {
+      id: string;
+      name: string;
+      url: string;
+      token: string;
+      collaboration: {
+        password: string;
+        synced: boolean;
+      };
+      lastOpened: string;
+    } = oldEchoes.vaults[i];
+    const vault: Vault = {
+      id: oldVault.id,
+      name: oldVault.name,
+      url: oldVault.url,
+      token: oldVault.token,
+      collaboration: {password: oldVault.collaboration.password},
+      lastOpened: oldVault.lastOpened,
+      state: {
+        tree: [],
+        trash: [],
+        files: [],
+        group: null,
+        groups: [],
+        sidebar: false,
+        synced: false
       }
     }
-    localStorage.clear();
-    localStorage.setItem('echoesmd-migration', 'true');
-    location.reload();
-  });
-} else {
-  const options = echoes.getOptions;
-  if (options.theme === 'dark') {
-    document.documentElement.classList.add('dark');
+    echoes.addVault(vault);
+    localStorage.removeItem('echoes');
   }
-  
-  if (options.openVault !== "none") {
-    const vault = echoes.getVault;
-    if (vault) {
-      router.push(`/${vault.id}`);
-    }
-  }
-  app.mount("#app");
 }
+
+const options = echoes.getOptions;
+if (options.theme === 'dark') {
+  document.documentElement.classList.add('dark');
+}
+
+if (options.openVault !== "none") {
+  const vault = echoes.getVault;
+  if (vault) {
+    router.push(`/${vault.id}`);
+  }
+}
+app.mount("#app");
