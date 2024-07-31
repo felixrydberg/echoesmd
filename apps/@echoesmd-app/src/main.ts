@@ -18,46 +18,49 @@ app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
 // Will only return 1.1  and below stores. Future stores are version locked.
-const oldEchoes = JSON.parse(localStorage.getItem('echoes') || '{}');
-if (oldEchoes.version !== Config["version-label"]) {
-  for (let i = 0; i < oldEchoes.vaults.length; i++) {
-    const oldVault: {
-      id: string;
-      name: string;
-      url: string;
-      token: string;
-      collaboration: {
-        password: string;
-        synced: boolean;
-      };
-      lastOpened: string;
-    } = oldEchoes.vaults[i];
-    const vault: Vault = {
-      id: oldVault.id,
-      name: oldVault.name,
-      url: oldVault.url,
-      token: oldVault.token,
-      collaboration: {password: oldVault.collaboration.password},
-      lastOpened: oldVault.lastOpened,
-      state: {
-        tree: [],
-        trash: [],
-        files: [],
-        group: null,
-        groups: [],
-        sidebar: false,
-        synced: false
+const oldEchoes = localStorage.getItem('echoes');
+if (oldEchoes) {
+  const parsed = JSON.parse(oldEchoes);
+  if (parsed.version !== Config["version-label"]) {
+    for (let i = 0; i < parsed.vaults.length; i++) {
+      const oldVault: {
+        id: string;
+        name: string;
+        url: string;
+        token: string;
+        collaboration: {
+          password: string;
+          synced: boolean;
+        };
+        lastOpened: string;
+      } = parsed.vaults[i];
+      const vault: Vault = {
+        id: oldVault.id,
+        name: oldVault.name,
+        url: oldVault.url,
+        token: oldVault.token,
+        collaboration: {password: oldVault.collaboration.password},
+        lastOpened: oldVault.lastOpened,
+        state: {
+          tree: [],
+          trash: [],
+          files: [],
+          group: null,
+          groups: [],
+          sidebar: false,
+          synced: false
+        }
       }
+      echoes.addVault(vault);
+      localStorage.removeItem('echoes');
+    
+      echoes.setOptions({
+        theme: parsed.theme,
+        openVault: parsed.openVault,
+        loading: parsed.loading,
+        tauri: parsed.tauri,
+      });
     }
-    echoes.addVault(vault);
-    localStorage.removeItem('echoes');
-  
-    echoes.setOptions({
-      theme: oldEchoes.theme,
-      openVault: oldEchoes.openVault,
-      loading: oldEchoes.loading,
-      tauri: oldEchoes.tauri,
-    });
   }
 }
 
