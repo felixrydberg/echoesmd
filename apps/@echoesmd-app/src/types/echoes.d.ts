@@ -13,6 +13,7 @@ interface Vault {
   token: string;
   collaboration: false | {
     password: string;
+    synced: boolean;
   };
   lastOpened: string;
   state: {

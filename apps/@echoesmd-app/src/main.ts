@@ -39,7 +39,7 @@ if (oldEchoes) {
         name: oldVault.name,
         url: oldVault.url,
         token: oldVault.token,
-        collaboration: {password: oldVault.collaboration.password},
+        collaboration: {password: oldVault.collaboration.password, synced: oldVault.collaboration.synced},
         lastOpened: oldVault.lastOpened,
         state: {
           tree: [],

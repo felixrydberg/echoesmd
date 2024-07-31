@@ -9,13 +9,13 @@ const getVaultKey = <K extends keyof Vault["state"]>(
     vaults: {[key: Vault["id"]]: Vault},
   }, 
   key: K
-): Vault["state"][K] => {
+): Vault["state"][K] | null => {
   const vault = state.vaults[id];
   if (!vault && state.options.openVault !== "none") {
     throw new Error(`Vault not found`);
   }
   if (state.options.openVault === "none") {
-    throw new Error(`No vault open`);
+    return null;
   }
 
   return vault?.state[key];
@@ -149,6 +149,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
 
     addTab (tab: ItemTab, id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       if (groups.length === 0) {
         this.addGroup();
       }
@@ -162,6 +165,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     // Mostly used to fix issue with Pinia persistance messing up Ydoc
     updateTab (tab: ItemTab, id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       // Update tab in all groups
       for (let i = 0; i < groups.length; i++) {
         const group = groups[i];
@@ -174,6 +180,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     },
     removeTab (id: ItemTab["id"], groupId?: Group["id"], vaultId?: Vault["id"]) {
       const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       const group = groups.find(x => x.id === groupId);
       if (!group) {
         return;
@@ -185,6 +194,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     getTab (id: ItemTab["id"], vaultId?: Vault["id"]) {
       const tabs: ItemTab[] = []
       const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       for (let i = 0; i < groups.length; i++) {
         const group = groups[i];
         tabs.push(...group.tabs);
@@ -196,6 +208,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     // Updates specific group
     updateGroup (group: Group, id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       const index = groups.findIndex(x => x.id === group.id);
       if (index === -1) {
         return;
@@ -209,6 +224,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     },
     addGroup (id?: Vault["id"]) {
       const groups = getVaultKey(id || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       const group: Group = {
         id: crypto.randomUUID(),
         active: 0,
@@ -221,6 +239,9 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
     },
     removeGroup (id: Group["id"], vaultId?: Vault["id"]) {
       const groups = getVaultKey(vaultId || this.options.openVault, this, 'groups');
+      if (!groups) {
+        return;
+      }
       const index = groups.findIndex(x => x.id === id);
       groups.splice(index, 1);
       setVaultKey(vaultId || this.options.openVault, this, 'groups', groups);

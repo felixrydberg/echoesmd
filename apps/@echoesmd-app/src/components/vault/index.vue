@@ -20,7 +20,7 @@
   const synced = computed(() => echoes.getSynced());
   const sidebar = computed(() => echoes.getSidebar());
   const groups = computed(() => echoes.getGroups());
-  if (groups.value.length === 0) {
+  if (groups.value?.length === 0) {
     echoes.addGroup();
   }
 
