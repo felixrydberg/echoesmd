@@ -343,6 +343,38 @@ export const createEchoInstance = () => {
       return "root";
     },
 
+    // Helper functions
+    getFilesFromParent: (parent: string) => {
+      validateInstance(instance);
+      const result: Item[] = [];
+      const yItems = instance.vault?.getMap<Item>('items-meta');
+      if (yItems) {
+        const items = yItems.toJSON();
+        for (const key in items) {
+          const item = items[key];
+          if (item.parent === parent) {
+            result.push(item);
+          }
+        }
+      }
+      return result;
+    },
+    getFilesFromKeyValue(key, value) {
+      validateInstance(instance);
+      const result: Item[] = [];
+      const yItems = instance.vault?.getMap<Item>('items-meta');
+      if (yItems) {
+        const items = yItems.toJSON();
+        for (const id in items) {
+          const item = items[id];
+          if (item[key] === value) {
+            result.push(item);
+          }
+        }
+      }
+      return result;
+    },
+
     createItem: (options: ItemOptions) => {
       validateInstance(instance);
       const {

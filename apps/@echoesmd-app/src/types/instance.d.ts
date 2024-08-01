@@ -33,6 +33,10 @@ interface EchoInstance {
   getTree: () => ItemTree[],
   getFiles: () => ItemTree[],
 
+  // Helper functions
+  getFilesFromParent: (parent: string) => Item[],
+  getFilesFromKeyValue: (key: string, value: string) => Item[],
+
   getPreviousItem: (options: ItemBase) => string,
   createItem: (options: ItemOptions) => void,
   addItem: (item: addItem | addItem[]) => void,
