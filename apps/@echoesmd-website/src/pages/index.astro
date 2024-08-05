@@ -222,95 +222,97 @@ const getUpdateDate = () => {
           {
             Object.entries(kanban).map(([title, state]) => (
               <div
-                class="flex-col min-w-64 max-w-64 rounded-lg"
+                class="flex flex-col min-w-64 max-w-64 rounded-lg max-h-[1024px]"
                 class:list={border.item}
               >
                 <h2 class="text-lg text-center pt-4">{title}</h2>
-                <div class="p-3 flex flex-wrap gap-y-3">
-                  {state.map((issue) => (
-                    <div
-                      class="rounded-lg shadow-lg p-4 w-full border-2"
-                      class:list={[background.item]}
-                      style={{ borderColor: hexToRgba((issue.state as State).color, 0.8)}}
-                    >
-                      <h3 class="font-medium">{issue?.name}</h3>
-                      <div class="flex flex-col capitalize text-sm">
-                        <div class="flex gap-x-1">
-                          <span class="flex items-center gap-x-1 text-neutral-500">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              class="size-4"
-                            >
-                              <path d="M12 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-1ZM6.5 6a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V6ZM2 9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9Z" />
-                            </svg>
-                            {issue.priority}
-                          </span>
-                          <span class="flex items-center gap-x-1 text-neutral-500">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              class="size-4"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M11.89 4.111a5.5 5.5 0 1 0 0 7.778.75.75 0 1 1 1.06 1.061A7 7 0 1 1 15 8a2.5 2.5 0 0 1-4.083 1.935A3.5 3.5 0 1 1 11.5 8a1 1 0 0 0 2 0 5.48 5.48 0 0 0-1.61-3.889ZM10 8a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                            {(issue.state as State)?.name}
-                          </span>
-                        </div>
-                        <div>
-                          <details class="group appearance-none">
-                            <summary class="flex justify-between cursor-pointer select-none">
-                              <span class="flex items-center gap-x-1 text-neutral-500">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 16 16"
-                                  fill="currentColor"
-                                  class="size-4"
-                                >
-                                  <path d="M3 4.75a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6.25 3a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM6.25 7.25a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM6.25 11.5a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM4 12.25a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM3 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" />
-                                </svg>
-                                Tags
-                              </span>
+                <div class="overflow-y-scroll m-1">
+                  <div class="p-3 pr-1 flex flex-wrap gap-y-3">
+                    {state.map((issue) => (
+                      <div
+                        class="rounded-lg shadow-lg p-4 w-full border-2"
+                        class:list={[background.item]}
+                        style={{ borderColor: hexToRgba((issue.state as State).color, 0.8)}}
+                      >
+                        <h3 class="font-medium">{issue?.name}</h3>
+                        <div class="flex flex-col capitalize text-sm">
+                          <div class="flex gap-x-1">
+                            <span class="flex items-center gap-x-1 text-neutral-500">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
                                 fill="currentColor"
-                                class="size-4 transition-all group-open:rotate-180"
+                                class="size-4"
+                              >
+                                <path d="M12 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-1ZM6.5 6a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V6ZM2 9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9Z" />
+                              </svg>
+                              {issue.priority}
+                            </span>
+                            <span class="flex items-center gap-x-1 text-neutral-500">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                class="size-4"
                               >
                                 <path
                                   fill-rule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                                  d="M11.89 4.111a5.5 5.5 0 1 0 0 7.778.75.75 0 1 1 1.06 1.061A7 7 0 1 1 15 8a2.5 2.5 0 0 1-4.083 1.935A3.5 3.5 0 1 1 11.5 8a1 1 0 0 0 2 0 5.48 5.48 0 0 0-1.61-3.889ZM10 8a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z"
                                   clip-rule="evenodd"
                                 />
                               </svg>
-                            </summary>
-                            <div class="flex flex-col pt-1 gap-y-1">
-                              {issue.labels.map((label) => (
-                                <div
-                                  class="flex w-fit px-2 items-center gap-x-1 rounded-full text-sm"
-                                  class:list={hover.item}
+                              {(issue.state as State)?.name}
+                            </span>
+                          </div>
+                          <div>
+                            <details class="group appearance-none">
+                              <summary class="flex justify-between cursor-pointer select-none">
+                                <span class="flex items-center gap-x-1 text-neutral-500">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 16 16"
+                                    fill="currentColor"
+                                    class="size-4"
+                                  >
+                                    <path d="M3 4.75a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM6.25 3a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM6.25 7.25a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM6.25 11.5a.75.75 0 0 0 0 1.5h7a.75.75 0 0 0 0-1.5h-7ZM4 12.25a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM3 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" />
+                                  </svg>
+                                  Tags
+                                </span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  class="size-4 transition-all group-open:rotate-180"
                                 >
-                                  <span
-                                    style={{
-                                      background: label?.color || "#000",
-                                    }}
-                                    class="w-2 h-2 rounded-lg"
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                                    clip-rule="evenodd"
                                   />
-                                  <span class="text-nowrap">{label?.name}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </details>
+                                </svg>
+                              </summary>
+                              <div class="flex flex-col pt-1 gap-y-1">
+                                {issue.labels.map((label) => (
+                                  <div
+                                    class="flex w-fit px-2 items-center gap-x-1 rounded-full text-sm"
+                                    class:list={hover.item}
+                                  >
+                                    <span
+                                      style={{
+                                        background: label?.color || "#000",
+                                      }}
+                                      class="w-2 h-2 rounded-lg"
+                                    />
+                                    <span class="text-nowrap">{label?.name}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </details>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             ))
