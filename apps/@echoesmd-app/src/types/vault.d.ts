@@ -5,23 +5,15 @@ interface ItemBase {
   previous?: string;
   component: string;
   deleted?: false | number;
-}
-
-interface ItemOptions {
-  addPageData?: (ydoc: Y.Doc) => void;
-  addOptions: () => ItemBase;
+  trashPath?: string;
 }
 
 interface Item extends ItemBase {
   parent: string;
   id: string;
   previous: string;
+  deleted: false | number;
   next?: string;
-}
-
-interface addItem {
-  item: Item;
-  options: ItemOptions;
 }
 
 interface ItemTree extends Item {
@@ -39,9 +31,8 @@ interface Tab {
 }
 
 export {
-  addItem,
+  Item,
   ItemBase,
-  ItemOptions,
   Item,
   ItemTree,
   ItemTab,
