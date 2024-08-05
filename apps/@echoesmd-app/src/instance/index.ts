@@ -482,7 +482,7 @@ export const createEchoInstance = () => {
               instance.vault
             );
           }
-          const children = instance.getFilesUnderItem(item);
+          const children = instance.getFilesUnderItem(item, false);
           for (let i = 0; i < children.length; i++) {
             const child = children[i];
             if (child.deleted) {
