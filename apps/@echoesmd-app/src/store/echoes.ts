@@ -71,11 +71,11 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
       return state.vaults
     },
 
-    getTree: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'tree'),
-    getTrash: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'trash'),
-    getFiles: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'files'),
-    getGroup: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'group'),
-    getGroups: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'groups'),
+    getTree: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'tree') || [],
+    getTrash: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'trash') || [],
+    getFiles: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'files') || [],
+    getGroup: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'group') || null,
+    getGroups: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'groups') || [],
     getSidebar: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'sidebar'),
     getSynced: (state) => (id: Vault["id"] = state.options.openVault) => getVaultKey(id, state, 'synced'),
   },

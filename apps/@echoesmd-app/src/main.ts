@@ -5,7 +5,6 @@ import { EchoesPlugin } from "./index";
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { routes } from './routes'
 import { useEchoesStore } from "./store/echoes";
-import { Vault } from "./types";
 import Config from '../../../config.json';
 const router = createRouter({
   history: createMemoryHistory(),
@@ -22,45 +21,22 @@ const oldEchoes = localStorage.getItem('echoes');
 if (oldEchoes) {
   const parsed = JSON.parse(oldEchoes);
   if (parsed.version !== Config["version-label"]) {
-    for (let i = 0; i < parsed.vaults.length; i++) {
-      const oldVault: {
-        id: string;
-        name: string;
-        url: string;
-        token: string;
-        collaboration: {
-          password: string;
-          synced: boolean;
-        };
-        lastOpened: string;
-      } = parsed.vaults[i];
-      const vault: Vault = {
-        id: oldVault.id,
-        name: oldVault.name,
-        url: oldVault.url,
-        token: oldVault.token,
-        collaboration: {password: oldVault.collaboration.password, synced: oldVault.collaboration.synced},
-        lastOpened: oldVault.lastOpened,
-        state: {
-          tree: [],
-          trash: [],
-          files: [],
-          group: null,
-          groups: [],
-          sidebar: false,
-          synced: false
+    // Wipe all vaults
+    indexedDB.databases().then(dbs => {
+      dbs.forEach(db => {
+        if (db.name) {
+          indexedDB.deleteDatabase(db.name);
         }
-      }
-      echoes.addVault(vault);
-      localStorage.removeItem('echoes');
-    
-      echoes.setOptions({
-        theme: parsed.theme,
-        openVault: parsed.openVault,
-        loading: parsed.loading,
-        tauri: parsed.tauri,
       });
-    }
+    });
+  
+    localStorage.removeItem('echoes');
+    echoes.setOptions({
+      theme: parsed.theme,
+      openVault: parsed.openVault,
+      loading: parsed.loading,
+      tauri: parsed.tauri,
+    });
   }
 }
 
