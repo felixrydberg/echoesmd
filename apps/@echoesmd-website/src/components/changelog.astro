@@ -1,0 +1,46 @@
+---
+import { type CollectionEntry } from "astro:content"
+import { background, border } from "@echoesmd/ui";
+import { twMerge } from 'tailwind-merge'
+
+interface Props {
+  update: CollectionEntry<"changelog">
+}
+
+const { update } = Astro.props;
+const { Content } = await update.render();
+---
+<div class="w-full flex justify-center">
+  <div class="my-4 [&:not(:hover)]:border-transparent p-6 rounded-lg transition-all" class:list={border.item}>
+    <div class="relative group h-7 click-to-copy cursor-pointer select-none" id={update.slug}>
+      <div class="group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -left-5 group-hover:left-0 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-4 fill-neutral-500">
+          <path fill-rule="evenodd" d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.396-4.402.75.75 0 0 1 1.251.827 2 2 0 0 0 3.085 2.514l2-2a2 2 0 0 0 0-2.828.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+          <path fill-rule="evenodd" d="M7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.396 4.402.75.75 0 0 1-1.251-.827 2 2 0 0 0-3.085-2.514l-2 2a2 2 0 0 0 0 2.828.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
+        </svg>      
+      </div>
+      <h1 class="text-2xl absolute left-0 group-hover:left-5 transition-all">v{update.data.version}:</h1>
+    </div>
+    <div class="text-xs p-1">
+      {update.data["early-access"] && <span class="p-1 rounded" class:list={twMerge([background.item, "text-neutral-500 dark:text-neutral-300"])}>Early Access</span>}
+      {update.data["release-date"] && <span class="p-1 rounded" class:list={twMerge([background.item, "text-neutral-500 dark:text-neutral-300"])}>Released on {update.data["release-date"]}</span>}
+    </div>
+    <div class="p-1 text-[14px]">
+      <Content />
+    </div>
+    <script>
+      const buttons = document.querySelectorAll(".click-to-copy");
+      for (let i = 0; i < buttons.length; i++) {
+        const button = buttons[i];
+        button.addEventListener("click", () => {
+          navigator.clipboard.writeText(`${location.origin}/#${button.id}`);
+          const h1 = button.querySelector("h1");
+          h1?.classList.add('animate-scale-down')
+          setTimeout(() => {
+            h1?.classList.remove('animate-scale-down')
+          }, 300)
+        });
+      }
+    </script>
+  </div>
+</div>
