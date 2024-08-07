@@ -112,11 +112,6 @@ const handleCreateFolder = () => {
                           <path fill-rule="evenodd" d="M4 2a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5V6.621a1.5 1.5 0 0 0-.44-1.06L9.94 2.439A1.5 1.5 0 0 0 8.878 2H4Zm1 5.75A.75.75 0 0 1 5.75 7h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 7.75Zm0 3a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
                         </svg>
                         {{ item.name }}
-                        <div>
-                          <div v-for="ytem in item.children">
-                            {{ytem.name}}
-                          </div>
-                        </div>
                       </div>
                       <div class="flex items-center gap-x-1">
                         <echoes-ui-button class="py-1 text-black dark:text-white hover:text-green-600 hover:dark:text-green-600" :background="false" :hover="false" @click="instance.restoreItem(item.id)">
