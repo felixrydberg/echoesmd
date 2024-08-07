@@ -90,7 +90,7 @@ const handleCreateFolder = () => {
             </div>
           </echoes-ui-button>
           <echoes-ui-modal v-model="trashModal">
-            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96">
+            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96 max-w-screen-lg">
               <div class="flex items-center pr-6">
                 <echoes-ui-button @click="trashModal = false" class="h-6 w-6" size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
@@ -150,7 +150,7 @@ const handleCreateFolder = () => {
             </div>
           </echoes-ui-button>
           <echoes-ui-modal v-model="settingsModal">
-            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96 min-h-64">
+            <echoes-ui-container class="flex flex-col p-2 rounded-lg min-w-96 max-w-96 min-h-64">
               <div class="flex items-center pr-6">
                 <echoes-ui-button @click="settingsModal = false" class="h-6 w-6" size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
