@@ -9,6 +9,10 @@ echo 'PLANE_API_KEY="<PLANE API TOKEN>"' >> .dev.vars
 npx wrangler d1 execute echoesmd-website --local --file=./schema/create.sql
 ```
 ## Local Environment doesnt work at the moment. Required Secrets wont be loaded through .dev.vars
+### Trigger Cron in local environment
+```sh
+curl "http://localhost:8787/__scheduled?cron=0+09+*+*+*"
+```
 ### Populating local D1
 ```sh
 curl "http://localhost:8787/trigger/populate"

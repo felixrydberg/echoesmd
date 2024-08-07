@@ -5,12 +5,15 @@
   import LoadingVue from './pages/loading.vue';
 
   const echoes = useEchoesStore();
-  const loading = computed(() => echoes.getLoading)
+  const options = computed(() => echoes.getOptions);
 
   onMounted(() => {
     const _window = (window as any).__TAURI__;
     if (_window !== undefined) {
-      echoes.setTauri(true);
+      echoes.setOptions({
+        ...options.value,
+        loading: true,
+      })
     }
   })
 </script>
@@ -18,7 +21,7 @@
 <template>
   <echoes-ui-container class="flex flex-col w-screen h-screen">
     <div class="h-full">
-      <loading-vue v-if="loading" />
+      <loading-vue v-if="options.loading" />
       <RouterView v-else class="h-full" />
     </div>
   </echoes-ui-container>

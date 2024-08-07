@@ -1,10 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { ScarlettCorePlugin } from "./index";
+import { EchoesPlugin } from "./index";
 
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { routes } from './routes'
 import { useEchoesStore } from "./store/echoes";
+import Config from '../../../config.json';
 const router = createRouter({
   history: createMemoryHistory(),
   routes,
@@ -12,20 +13,42 @@ const router = createRouter({
 
 const app = createApp(App);
 app.use(router);
-app.use(ScarlettCorePlugin);
+app.use(EchoesPlugin);
 
 const echoes = useEchoesStore();
-const autoOpen = echoes.getOpenLast;
-const theme = echoes.getTheme;
-if (theme === 'dark') {
+// Will only return 1.1  and below stores. Future stores are version locked.
+const oldEchoes = localStorage.getItem('echoes');
+if (oldEchoes) {
+  const parsed = JSON.parse(oldEchoes);
+  if (parsed.version !== Config["version-label"]) {
+    // Wipe all vaults
+    indexedDB.databases().then(dbs => {
+      dbs.forEach(db => {
+        if (db.name) {
+          indexedDB.deleteDatabase(db.name);
+        }
+      });
+    });
+  
+    localStorage.removeItem('echoes');
+    echoes.setOptions({
+      theme: parsed.theme,
+      openVault: parsed.openVault,
+      loading: parsed.loading,
+      tauri: parsed.tauri,
+    });
+  }
+}
+
+const options = echoes.getOptions;
+if (options.theme === 'dark') {
   document.documentElement.classList.add('dark');
 }
 
-if (autoOpen) {
-  const vaults = echoes.getVaults;
-  if (vaults.length > 0) {
-    const lastVault = vaults[0];
-    router.push(`/${lastVault.id}`)
+if (options.openVault !== "none") {
+  const vault = echoes.getVault;
+  if (vault) {
+    router.push(`/${vault.id}`);
   }
 }
 app.mount("#app");

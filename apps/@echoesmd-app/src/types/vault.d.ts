@@ -1,14 +1,3 @@
-interface Vault {
-  name: string;
-  url: string;
-  id: string;
-  token: string;
-  collaboration: false | {
-    password: string;
-  };
-  lastOpened: string;
-}
-
 interface ItemBase {
   type: "folder" | "page";
   name: string;
@@ -16,30 +5,22 @@ interface ItemBase {
   previous?: string;
   component: string;
   deleted?: false | number;
-}
-
-interface ItemOptions {
-  addPageData?: (ydoc: Y.Doc) => void;
-  addOptions: () => ItemBase;
+  trashPath?: string;
 }
 
 interface Item extends ItemBase {
   parent: string;
   id: string;
   previous: string;
+  deleted: false | number;
   next?: string;
-}
-
-interface addItem {
-  item: Item;
-  options: ItemOptions;
 }
 
 interface ItemTree extends Item {
   children?: ItemTree[];
 }
 
-interface ItemPage extends Item {
+interface ItemTab extends Item {
   ydoc: Y.Doc;
 }
 
@@ -49,21 +30,11 @@ interface Tab {
   props: Record<string, unknown>;
 }
 
-interface Group {
-  id: number;
-  active: number;
-  name: string;
-  tabs: ItemPage[];
-}
-
 export {
-  Vault,
-  addItem,
+  Item,
   ItemBase,
-  ItemOptions,
   Item,
   ItemTree,
-  ItemPage,
+  ItemTab,
   Tab,
-  Group,
 }
