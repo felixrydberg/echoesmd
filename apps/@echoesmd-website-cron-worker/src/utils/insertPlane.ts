@@ -3,25 +3,71 @@ import { Label, Issue, State, Response } from '../types';
 export const insertPlane = async (d1: D1Database, results: [Response<Label>, Response<Issue>, Response<State>]) => {
 	// Prepeared statements for inserting data into D1
 	const insertLabel = `
-    INSERT INTO Labels (
-      id, created_at, updated_at, name, description, color, sort_order, created_by, updated_by, project, workspace, parent
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (id) DO NOTHING;
-  `;
+		INSERT INTO Labels (
+			id, created_at, updated_at, name, description, color, sort_order, created_by, updated_by, project, workspace, parent
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT (id) DO UPDATE SET
+			created_at = excluded.created_at,
+			updated_at = excluded.updated_at,
+			name = excluded.name,
+			description = excluded.description,
+			color = excluded.color,
+			sort_order = excluded.sort_order,
+			created_by = excluded.created_by,
+			updated_by = excluded.updated_by,
+			project = excluded.project,
+			workspace = excluded.workspace,
+			parent = excluded.parent;
+	`;
 
 	const insertIssue = `
-    INSERT INTO Issues (
-      id, created_at, updated_at, estimate_point, name, description_html, description_stripped, priority, start_date, target_date, sequence_id, sort_order, completed_at, archived_at, is_draft, created_by, updated_by, project, workspace, parent, state, assignees, labels
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (id) DO NOTHING;
-  `;
+		INSERT INTO Issues (
+			id, created_at, updated_at, estimate_point, name, description_html, description_stripped, priority, start_date, target_date, sequence_id, sort_order, completed_at, archived_at, is_draft, created_by, updated_by, project, workspace, parent, state, assignees, labels
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT (id) DO UPDATE SET
+			created_at = excluded.created_at,
+			updated_at = excluded.updated_at,
+			estimate_point = excluded.estimate_point,
+			name = excluded.name,
+			description_html = excluded.description_html,
+			description_stripped = excluded.description_stripped,
+			priority = excluded.priority,
+			start_date = excluded.start_date,
+			target_date = excluded.target_date,
+			sequence_id = excluded.sequence_id,
+			sort_order = excluded.sort_order,
+			completed_at = excluded.completed_at,
+			archived_at = excluded.archived_at,
+			is_draft = excluded.is_draft,
+			created_by = excluded.created_by,
+			updated_by = excluded.updated_by,
+			project = excluded.project,
+			workspace = excluded.workspace,
+			parent = excluded.parent,
+			state = excluded.state,
+			assignees = excluded.assignees,
+			labels = excluded.labels;
+	`;
 
 	const insertState = `
-    INSERT INTO States (
-      id, created_at, updated_at, name, description, color, slug, sequence, "group", "default", created_by, updated_by, project, workspace
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (id) DO NOTHING;
-  `;
+		INSERT INTO States (
+			id, created_at, updated_at, name, description, color, slug, sequence, "group", "default", created_by, updated_by, project, workspace
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT (id) DO UPDATE SET
+			created_at = excluded.created_at,
+			updated_at = excluded.updated_at,
+			name = excluded.name,
+			description = excluded.description,
+			color = excluded.color,
+			slug = excluded.slug,
+			sequence = excluded.sequence,
+			"group" = excluded."group",
+			"default" = excluded."default",
+			created_by = excluded.created_by,
+			updated_by = excluded.updated_by,
+			project = excluded.project,
+			workspace = excluded.workspace;
+	`;
 	// Validate result and insert into D1
 	const [labels, issues, states] = results.map((result) => result.results) as [Label[], Issue[], State[]];
 
