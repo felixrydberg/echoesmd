@@ -49,3 +49,58 @@ html.light {
 .dark *::-webkit-scrollbar-thumb {
   @apply bg-neutral-700;
 }
+
+.markdown-content * {
+  @apply text-current;
+}
+
+.markdown-content table {
+  @apply rounded border border-spacing-0 border-separate border-neutral-300 dark:border-neutral-800 w-full
+}
+
+.markdown-content table tbody {
+  @apply rounded-b
+}
+
+.markdown-content table td,
+.markdown-content table th {
+  @apply py-1 px-2 border-b border-r border-separate border-neutral-300 dark:border-neutral-800 text-start font-normal
+}
+
+.markdown-content table tr th:last-child,
+.markdown-content table tr td:last-child {
+  @apply border-r-0
+}
+
+.markdown-content table tr:last-child td {
+  @apply border-b-0
+}
+
+.markdown-content .astro-code {
+  @apply rounded p-2
+}
+
+.markdown-content .astro-code,
+.markdown-content table {
+  @apply my-4
+}
+
+.markdown-content h1 {
+  @apply text-3xl font-medium mt-8 mb-4
+}
+
+.markdown-content h2 {
+  @apply text-2xl font-medium mt-6 mb-3
+}
+
+.markdown-content h3 {
+  @apply text-xl font-medium mt-5 mb-2
+}
+
+.markdown-content ul {
+  @apply list-disc pl-6 my-1;
+}
+
+.markdown-content a {
+  @apply underline;
+}

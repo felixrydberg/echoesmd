@@ -2,6 +2,7 @@
 import { type CollectionEntry } from "astro:content"
 import { background, border } from "@echoesmd/ui";
 import { twMerge } from 'tailwind-merge'
+import { getUpdateDate, getUpdateDateWTime } from "../utils";
 
 interface Props {
   update: CollectionEntry<"changelog">
@@ -11,7 +12,7 @@ const { update } = Astro.props;
 const { Content } = await update.render();
 ---
 <div class="w-full flex justify-center">
-  <div class="my-4 [&:not(:hover)]:border-transparent p-6 rounded-lg transition-all" class:list={border.item}>
+  <div class="my-4 max-w-screen-sm w-full [&:not(:hover)]:border-transparent p-6 rounded-lg transition-all" class:list={border.item}>
     <div class="relative group h-7 click-to-copy cursor-pointer select-none" id={update.slug}>
       <div class="group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -left-5 group-hover:left-0 transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-4 fill-neutral-500">
@@ -23,9 +24,9 @@ const { Content } = await update.render();
     </div>
     <div class="text-xs p-1">
       {update.data["early-access"] && <span class="p-1 rounded" class:list={twMerge([background.item, "text-neutral-500 dark:text-neutral-300"])}>Early Access</span>}
-      {update.data["release-date"] && <span class="p-1 rounded" class:list={twMerge([background.item, "text-neutral-500 dark:text-neutral-300"])}>Released on {update.data["release-date"]}</span>}
+      {update.data["release-date"] && <span class="p-1 rounded" title={`${getUpdateDateWTime(new Date(update.data["release-date"]))} UTC`} class:list={twMerge([background.item, "text-neutral-500 dark:text-neutral-300"])}>Released {getUpdateDate(new Date(update.data["release-date"]))}</span>}
     </div>
-    <div class="p-1 text-[14px]">
+    <div class="p-1 text-[15px] markdown-content">
       <Content />
     </div>
     <script>
