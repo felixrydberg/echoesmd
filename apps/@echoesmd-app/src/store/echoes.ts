@@ -159,7 +159,11 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
       if (!group) {
         return;
       }
-      group.tabs.push(tab);
+      const index = group.tabs.findIndex(x => x.id === tab.id);
+      if (index === -1) {
+        group.tabs.push(tab);
+      }
+      group.active = index === -1 ? group.tabs.length - 1 : index;
       setVaultKey(id || this.options.openVault, this, 'groups', groups);
     },
     // Mostly used to fix issue with Pinia persistance messing up Ydoc
