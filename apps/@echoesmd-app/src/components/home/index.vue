@@ -2,17 +2,17 @@
   import { computed, ref, onMounted, watch } from 'vue';
   import EchoesAppHeader from '../ui/header.vue';
   import { EchoesUiContainer, EchoesUiList, EchoesUiListItem, EchoesUiButton, border } from '@echoesmd/ui'
-  import { Tippy } from 'vue-tippy'
   import EchoesCreateModal from './modals/create.vue';
   import { useEchoesStore } from '../../store/echoes';
   import { useRouter } from 'vue-router';
   import { Vault } from '../../types';
   import { formatDate } from '../../utils/index';
   import Config from '../../../../../config.json';
+  import Settings from '../settings/index.vue';
 
   const createModal = ref(false);
+  const settingsModal = ref(false);
   const echoes = useEchoesStore();
-  const options = computed(() => echoes.getOptions);
   const router = useRouter();
   const vaultsObj = computed(() => echoes.getVaults);
   const vaults = ref<Vault[]>([]);
@@ -64,16 +64,6 @@
   watch(vaultsObj, (newValue) => {
     vaults.value = Object.values(newValue).sort((a, b) => new Date(b.lastOpened).getTime() - new Date(a.lastOpened).getTime());
   });
-  const resetApplication = async () => {
-    const dbs = (await indexedDB.databases()).map((db) => db.name);
-    dbs.forEach((db) => {
-      if (db) {
-        indexedDB.deleteDatabase(db);
-      }
-    });
-    echoes.$reset();
-    location.reload();
-  }
 </script>
 
 <template>
@@ -150,26 +140,12 @@
         </div>
       </echoes-ui-container>
       <div class="absolute bottom-0 right-0 -translate-y-full p-4 pb-2">
-        <div class="group">
-          <tippy theme="echoes" interactive class="group">
-            <echoes-ui-button size="small" class="text-neutral-500">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-neutral-500 size-3.5 group-hover:rotate-180 transition-all">
-                <path fill-rule="evenodd" d="M7.84 1.804A1 1 0 0 1 8.82 1h2.36a1 1 0 0 1 .98.804l.331 1.652a6.993 6.993 0 0 1 1.929 1.115l1.598-.54a1 1 0 0 1 1.186.447l1.18 2.044a1 1 0 0 1-.205 1.251l-1.267 1.113a7.047 7.047 0 0 1 0 2.228l1.267 1.113a1 1 0 0 1 .206 1.25l-1.18 2.045a1 1 0 0 1-1.187.447l-1.598-.54a6.993 6.993 0 0 1-1.929 1.115l-.33 1.652a1 1 0 0 1-.98.804H8.82a1 1 0 0 1-.98-.804l-.331-1.652a6.993 6.993 0 0 1-1.929-1.115l-1.598.54a1 1 0 0 1-1.186-.447l-1.18-2.044a1 1 0 0 1 .205-1.251l1.267-1.114a7.05 7.05 0 0 1 0-2.227L1.821 7.773a1 1 0 0 1-.206-1.25l1.18-2.045a1 1 0 0 1 1.187-.447l1.598.54A6.992 6.992 0 0 1 7.51 3.456l.33-1.652ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
-              </svg>
-            </echoes-ui-button>
-            <template #content>
-              <echoes-ui-container class="w-36 flex flex-col gap-y-1 p-2 rounded-lg text-xs" border="item">
-                <echoes-ui-button size="small" @click="echoes.setOptions({...options, theme: options.theme === 'light' ? 'dark' : 'light'})">
-                  Change Theme
-                </echoes-ui-button>
-                <echoes-ui-button size="small" @click="resetApplication">
-                  Reset Application
-                </echoes-ui-button>
-              </echoes-ui-container>
-            </template>
-          </tippy>
-        </div>
-        
+        <echoes-ui-button @click="settingsModal = !settingsModal" size="small" class="text-neutral-500 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-neutral-500 size-3.5 group-hover:rotate-180 transition-all">
+            <path fill-rule="evenodd" d="M7.84 1.804A1 1 0 0 1 8.82 1h2.36a1 1 0 0 1 .98.804l.331 1.652a6.993 6.993 0 0 1 1.929 1.115l1.598-.54a1 1 0 0 1 1.186.447l1.18 2.044a1 1 0 0 1-.205 1.251l-1.267 1.113a7.047 7.047 0 0 1 0 2.228l1.267 1.113a1 1 0 0 1 .206 1.25l-1.18 2.045a1 1 0 0 1-1.187.447l-1.598-.54a6.993 6.993 0 0 1-1.929 1.115l-.33 1.652a1 1 0 0 1-.98.804H8.82a1 1 0 0 1-.98-.804l-.331-1.652a6.993 6.993 0 0 1-1.929-1.115l-1.598.54a1 1 0 0 1-1.186-.447l-1.18-2.044a1 1 0 0 1 .205-1.251l1.267-1.114a7.05 7.05 0 0 1 0-2.227L1.821 7.773a1 1 0 0 1-.206-1.25l1.18-2.045a1 1 0 0 1 1.187-.447l1.598.54A6.992 6.992 0 0 1 7.51 3.456l.33-1.652ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+          </svg>
+        </echoes-ui-button>
+        <Settings v-model="settingsModal" />
       </div>
     </div>
   </div>

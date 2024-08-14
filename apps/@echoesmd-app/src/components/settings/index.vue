@@ -1,41 +1,73 @@
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import { useEchoesStore } from '../../store/echoes';
-  import EchoesAppHeader from '../ui/header.vue';
-  import EchoesBackButton from '../ui/back-button.vue';
-  import { EchoesUiContainer, EchoesUiList, EchoesUiListItem, EchoesUiButton, border } from '@echoesmd/ui'
+  import { EchoesUiContainer, EchoesUiList, EchoesUiListItem, EchoesUiButton, background, hover } from '@echoesmd/ui'
+  import EchoesUiModal from '../ui/modal.vue'
+  import { SettingsGroup } from '@echoesmd/plugin-types';
 
+  const props = defineProps({
+    modelValue: {
+      type: Boolean,
+      required: true
+    }
+  })
+  const emit = defineEmits(['update:modelValue'])
+
+  const settingsModal = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
+  })
 
   const echoes = useEchoesStore();
-  const options = computed(() => echoes.getOptions);
+  const settings = computed(() => echoes.getSettings);
+  const sections = reactive(Object.groupBy(Object.values(settings.value), (setting) => setting.section))
+
+  const activeSection = ref<keyof typeof settings.value>(settings.value[Object.keys(settings.value)[0]].id)
+
+  const handleGroupItemClick = (group: SettingsGroup) => {
+    if (group.type === 'button') {
+      group.action()
+      return;
+    } else {
+      activeSection.value = group.id
+    }
+  }
+
+  console.log(sections)
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <echoes-app-header />
-    <echoes-ui-container size="lg" class="flex flex-col h-full my-8 gap-y-4 text-center">
-      <div class="flex">
-        <echoes-back-button />
+  <echoes-ui-modal v-model="settingsModal">
+    <echoes-ui-container class="flex flex-col p-2 rounded-lg max-w-[1200px] h-[900px]">
+      <div class="flex items-center pr-6">
+        <echoes-ui-button @click="settingsModal = false" class="h-6 w-6" size="small">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+            <path fill-rule="evenodd" d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+          </svg>
+        </echoes-ui-button>
+        <p class="text-lg font-bold w-full text-center">Settings</p>
       </div>
-      <h1 class="text-2xl">
-        Settings
-      </h1>
-      <echoes-ui-list class="text-start mr-4">
-          <echoes-ui-list-item :class="border.item" class="text-sm p-2 px-6 font-normal flex gap-x-8 my-4 justify-between items-center border-t-0 border-r-0 border-l-0">
-            <div>
-              <h1>Change Theme</h1>
-              <p></p>
+      <div class="h-full">
+        <div class="flex h-full">
+          <div class="flex flex-col h-full w-48">
+            <div v-for="(key) in ['general', 'plugins', 'danger-zone']" :key="key">
+              <h5 class="capitalize text-sm">{{ key.replaceAll('-', ' ') }}</h5>
+              <echoes-ui-list class="flex flex-col ml-0">
+                <echoes-ui-list-item v-for="group in sections[key as keyof typeof sections]" :key="group.id">
+                  <button
+                    :class="[activeSection === group.id ? background.item : '', hover.item]"
+                    class="text-start w-full p-1 transition-colors rounded"
+                    @click="handleGroupItemClick(group)"
+                  >{{ group.title }}</button>
+                </echoes-ui-list-item>
+              </echoes-ui-list>
             </div>
-            <echoes-ui-button @click="echoes.setOptions({...options, theme: options.theme === 'light' ? 'dark' : 'light'})">
-              <svg class="size-4 block dark:hidden m-0 animate-[spin_500ms_ease]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 1a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 1ZM10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM12.95 4.11a.75.75 0 1 0-1.06-1.06l-1.062 1.06a.75.75 0 0 0 1.061 1.062l1.06-1.061ZM15 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 15 8ZM11.89 12.95a.75.75 0 0 0 1.06-1.06l-1.06-1.062a.75.75 0 0 0-1.062 1.061l1.061 1.06ZM8 12a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 12ZM5.172 11.89a.75.75 0 0 0-1.061-1.062L3.05 11.89a.75.75 0 1 0 1.06 1.06l1.06-1.06ZM4 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 4 8ZM4.11 5.172A.75.75 0 0 0 5.173 4.11L4.11 3.05a.75.75 0 1 0-1.06 1.06l1.06 1.06Z" />
-              </svg>
-              <svg class="size-4 hidden dark:block m-0 animate-[spin_500ms_ease]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M14.438 10.148c.19-.425-.321-.787-.748-.601A5.5 5.5 0 0 1 6.453 2.31c.186-.427-.176-.938-.6-.748a6.501 6.501 0 1 0 8.585 8.586Z" />
-              </svg>
-            </echoes-ui-button>
-          </echoes-ui-list-item>
-        </echoes-ui-list>
+          </div>
+          <div class="w-full h-full">
+            {{ settings[activeSection] }}
+          </div>
+        </div>
+      </div>
     </echoes-ui-container>
-  </div>
+  </echoes-ui-modal>
 </template>

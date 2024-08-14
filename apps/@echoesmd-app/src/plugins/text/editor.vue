@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Extensions } from '../../index'
+import { Extensions } from '../../extensions/index';
 import { ItemTab } from '../../types';
 import { PropType, toRaw } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3'

@@ -2,7 +2,6 @@ import { App } from "vue";
 import { IndexeddbPersistence } from "y-indexeddb";
 import {
   Item,
-  ItemBase,
   ItemTab,
   ItemTree,
   EchoInstance,
@@ -29,10 +28,13 @@ const validateInstance = (instance: EchoInstance) => {
 let activeInstance: EchoInstance | null = null;
 
 export const createEchoInstance = () => {
-  const subscriptions: { [key: string]: (...args: unknown[]) => void } = {};
+  const subscriptions: { [key: string]: ((...args: unknown[]) => void)[] } = {};
   const emit = (event: EchoInstanceEvents, ...args: unknown[]) => {
     if (subscriptions[event]) {
-      subscriptions[event](...args);
+      for (let i = 0; i < subscriptions[event].length; i++) {
+        subscriptions[event][i](...args);
+        
+      }
     }
   };
 
@@ -111,29 +113,6 @@ export const createEchoInstance = () => {
 
         const db = new IndexeddbPersistence(`echoesmd:${vault.guid}`, vault);
         db.on("synced", async () => {
-          console.log("Synced ----------------");
-          console.log(
-            instance.getFilesFromKeyValue({
-              key: "type",
-              value: "folder",
-              condition: "equals",
-            })
-          );
-          console.log(
-            instance.getFilesFromKeyValue({
-              key: "type",
-              value: "page",
-              condition: "equals",
-            })
-          );
-          console.log(
-            instance.getFilesFromKeyValue({
-              key: "parent",
-              value: "934001db-02bf-4be4-bf13-4a4ee22fa03c",
-              condition: "equals",
-            })
-          )
-          console.log("-----------------------");
           store.setSynced(true);
           const subdocs = Array.from(vault.getSubdocs()).map(
             (subdoc) => `${vault.guid}:${subdoc.guid}`
@@ -229,17 +208,20 @@ export const createEchoInstance = () => {
       callback: (...args: unknown[]) => void
     ) => {
       validateInstance(instance);
-      subscriptions[event] = callback;
+      if (!subscriptions[event]) {
+        subscriptions[event] = [];
+      }
+      subscriptions[event].push(callback);
     },
     unsubscribe: (
       event: EchoInstanceEvents,
       callback: (...args: unknown[]) => void
     ) => {
       validateInstance(instance);
-      for (const key in subscriptions) {
-        if (event === key && subscriptions[key] === callback) {
-          delete subscriptions[key];
-          break;
+      if (subscriptions[event]) {
+        const index = subscriptions[event].indexOf(callback);
+        if (index !== -1) {
+          subscriptions[event].splice(index, 1);
         }
       }
     },
@@ -539,7 +521,7 @@ export const createEchoInstance = () => {
                 name: name,
                 parent: parent,
                 previous: prev ? prev.id : "root",
-                component: "echoesmd-editor",
+                component: "file-default",
                 type: "folder",
                 deleted: false,
               };

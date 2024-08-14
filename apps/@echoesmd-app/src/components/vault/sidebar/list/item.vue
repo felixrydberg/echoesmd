@@ -78,7 +78,7 @@
           name: "New File",
           type: "page",
           parent: props.file.id,
-          component: "echoesmd-editor",
+          component: "file-default",
         })
       } else {
         instance.createItem({
@@ -86,7 +86,7 @@
           type: "page",
           parent: props.file.parent,
           previous: props.file.id,
-          component: "echoesmd-editor",
+          component: "file-default",
         })
       }
       _tippyInstance.hide();
@@ -97,7 +97,7 @@
           name: "New Folder",
           type: "folder",
           parent: props.file.id,
-          component: "echoesmd-editor",
+          component: "file-default",
         })
       } else {
         instance.createItem({
@@ -105,7 +105,7 @@
           type: "folder",
           parent: props.file.parent,
           previous: props.file.id,
-          component: "echoesmd-editor",
+          component: "file-default",
         })
       }
       _tippyInstance.hide();

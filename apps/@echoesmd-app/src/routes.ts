@@ -1,22 +1,37 @@
 import VaultVue from './pages/vault.vue';
 import VaultIndex from './pages/vault/index.vue';
-import VaultFile from './pages/vault/file.vue';
-import VaultSettings from './pages/vault/settings.vue';
-import VaultTrash from './pages/vault/trash.vue';
+// import VaultFile from './pages/vault/file.vue';
+// import VaultSettings from './pages/vault/settings.vue';
+// import VaultTrash from './pages/vault/trash.vue';
 import Home from './pages/home.vue'
-import Settings from './pages/settings.vue'
+
 import { RouterOptions } from 'vue-router';
 import { useEchoesStore } from './store/echoes';
 import { createEchoInstance } from './instance';
 import * as Y from 'yjs';
 
 export const routes: RouterOptions["routes"] = [
-  { path: "/", component: Home },
-  { path: "/settings", component: Settings },
+  {
+    path: "/",
+    component: Home,
+    meta: {name: "home"},
+    beforeEnter: async (_to, from) => {
+      if (from.meta.name === "vault") {
+        const echoes = useEchoesStore();
+        echoes.setOptions({
+          ...echoes.getOptions,
+          openVault: "none",
+        });
+      }
+      return true;
+    },
+  },
   {
     path: "/:vault",
     component: VaultVue,
+    meta: {name: "vault"},
     beforeEnter: async (to, from) => {
+      // [echoe-02] Rework this when implementing Collaboration server
       const { vault } = to.params;
       const echoes = useEchoesStore();
       const instance = createEchoInstance();
@@ -67,7 +82,6 @@ export const routes: RouterOptions["routes"] = [
         echoes.setSynced(false);
         return true;
       }
-
       return false
     },
     children: [

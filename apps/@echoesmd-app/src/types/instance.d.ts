@@ -35,8 +35,6 @@ interface Tab {
 }
 
 type EchoInstanceEvents = 
-"page:loaded" |
-"page:unloaded" |
 "tree:update" |
 "trash:update" |
 "files:update"

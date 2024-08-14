@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import { AppOptions, Group, ItemTab, Vault } from "../types";
 import Config from '../../../../config.json';
+import { SettingsGroup } from "@echoesmd/plugin-types";
 
 const getVaultKey = <K extends keyof Vault["state"]>(
   id: Vault["id"], 
@@ -43,6 +44,8 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
       version: string,
       options: AppOptions,
       vaults: {[key: Vault["id"]]: Vault},
+      settings: {[key: string]: SettingsGroup },
+      files: string[],
     } = {
       version: "1.2.0_early-access",
       options: {
@@ -52,6 +55,8 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
         loading: false,
       },
       vaults: {},
+      settings: {},
+      files: [],
     }
     return state;
   },
@@ -59,6 +64,12 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
   getters: {
     getOptions: (state) => {
       return state.options;
+    },
+    getSettings: (state) => {
+      return state.settings;
+    },
+    getFileTypes: (state) => {
+      return state.files;
     },
 
     getVault: (state) => {
@@ -250,5 +261,19 @@ export const useEchoesStore = defineStore(`echoes-${Config.version}`, {
       groups.splice(index, 1);
       setVaultKey(vaultId || this.options.openVault, this, 'groups', groups);
     },
+
+    addFileType(name: string) {
+      const index = this.files.findIndex(x => x === name);
+      if (index === -1) {
+        this.files.push(name);
+      }
+    },
+    resetFileTypes() {
+      this.files = [];
+    },
+
+    updateSettingsGroup(group: SettingsGroup) {
+      this.settings[group.id] = group;
+    }
   },
 })
